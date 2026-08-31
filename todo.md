@@ -33,3 +33,9 @@
 - [x] Add a fixed mini player that remains visible while scrolling.
 - [x] Add play/pause state, live indicator, and external HOT 97 link.
 - [x] Verify desktop and mobile behavior, then publish the update.
+
+# Braz Monkey HOT 97 Player Fix
+
+- [x] Find and validate a direct HOT 97 audio stream URL.
+- [x] Replace the embedded widget with a direct audio player and visible controls.
+- [x] Verify play/pause behavior and publish the fix.

@@ -65,20 +65,34 @@ function CursorFollower() {
 
 function Hot97Player() {
   const [expanded, setExpanded] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const togglePlayback = async () => {
+    if (!audioRef.current) return;
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+      return;
+    }
+    try {
+      await audioRef.current.play();
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+    }
+  };
 
   return (
     <aside className={`hot97-player ${expanded ? "is-expanded" : ""}`} aria-label="HOT 97 live player">
+      <audio ref={audioRef} src="https://playerservices.streamtheworld.com/api/livestream-redirect/WQHTFM.mp3" preload="none" />
       <button className="hot97-toggle" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
         <span className="pulse-dot" />
         <span>HOT 97 LIVE</span>
       </button>
       <div className="hot97-panel">
-        <iframe
-          title="HOT 97 live player"
-          src="https://mytuner-radio.com/widgets/player/?f=395120"
-          loading="lazy"
-          allow="autoplay; encrypted-media"
-        />
+        <button className="hot97-play" onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button>
+        <p>{playing ? "Streaming live from New York." : "Tap play to start the HOT 97 live stream."}</p>
         <a href="https://www.hot97.com/listen-live/" target="_blank" rel="noopener noreferrer">OPEN OFFICIAL PLAYER ↗</a>
       </div>
     </aside>
