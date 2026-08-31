@@ -1,5 +1,5 @@
 // Signal Zine direction: this page behaves like a living broadcast sheet—left-aligned, textured, direct, and built around three weekly transmissions.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const transmissions = [
   {
@@ -33,6 +33,36 @@ const transmissions = [
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow"];
 
+function CursorFollower() {
+  const cursorRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    const handleMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse" || !cursorRef.current) return;
+      const target = event.target as HTMLElement;
+      const interactive = Boolean(target.closest("a, button"));
+      const lastX = Number(cursorRef.current.dataset.x || event.clientX);
+      const lastY = Number(cursorRef.current.dataset.y || event.clientY);
+      const distance = Math.hypot(event.clientX - lastX, event.clientY - lastY);
+      const motionScale = Math.min(1.45, 0.82 + distance / 90);
+      const scale = interactive ? 1.55 : motionScale;
+      cursorRef.current.dataset.x = String(event.clientX);
+      cursorRef.current.dataset.y = String(event.clientY);
+      cursorRef.current.style.opacity = "1";
+      cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(${scale})`;
+    };
+    const handleLeave = () => { if (cursorRef.current) cursorRef.current.style.opacity = "0"; };
+    window.addEventListener("pointermove", handleMove, { passive: true });
+    document.documentElement.addEventListener("mouseleave", handleLeave);
+    return () => {
+      window.removeEventListener("pointermove", handleMove);
+      document.documentElement.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
+
+  return <img ref={cursorRef} className="cursor-follower" src="/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png" alt="" aria-hidden="true" />;
+}
+
 export default function Home() {
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,6 +86,7 @@ export default function Home() {
 
   return (
     <div className="site-shell">
+      <CursorFollower />
       <div className="ticker" aria-label="Braz Monkey transmission ticker">
         <div className="ticker-track">
           {Array.from({ length: 2 }).flatMap((_, repeat) =>
