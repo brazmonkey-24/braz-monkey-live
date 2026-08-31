@@ -90,3 +90,10 @@
 
 - [x] Add autoplay behavior to the HOT 97 player.
 - [x] Verify and publish the autoplay update.
+
+# Braz Monkey Background Slideshow Update
+
+- [x] Inspect the provided hero-slider.js reference.
+- [x] Implement a background photo slideshow with all supplied images.
+- [x] Ensure all pictures fit correctly with responsive sizing.
+- [x] Verify and publish the slideshow update.
