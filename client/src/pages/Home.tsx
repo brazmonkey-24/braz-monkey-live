@@ -156,6 +156,7 @@ export default function Home() {
           <div className="hero-glitch" />
           <div className="hero-copy">
             <p className="eyebrow">// TRANSMISSION INCOMING <span>FM 00.404</span></p>
+            <h1 className="glitch-title" data-text="BRAZ MONKEY">BRAZ<br /><em>MONKEY</em></h1>
             <p className="hero-description">An alien with no origin, no history. Just landed on Earth and trying to figure it all out—one Monday quote, one bet, one vinyl record at a time.</p>
             <div className="hero-actions"><button className="button button-primary" onClick={() => jump("transmissions")}>FOLLOW THE SIGNAL <span>↗</span></button><button className="button button-ghost" onClick={() => jump("origin")}>THE STORY <span>→</span></button></div>
           </div>

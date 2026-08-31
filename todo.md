@@ -57,3 +57,9 @@
 
 - [x] Remove the duplicate BRAZ MONKEY text from the Signal page hero.
 - [x] Verify and publish the Signal page update.
+
+# Braz Monkey Signal Page Text Restoration
+
+- [x] Restore the BRAZ MONKEY text on the Signal page hero.
+- [x] Add a stronger glitch effect to the hero text.
+- [x] Verify and publish the Signal page update.
