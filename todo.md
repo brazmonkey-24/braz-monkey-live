@@ -52,3 +52,8 @@
 - [x] Raise the larger logo above the header and hero layers.
 - [x] Verify desktop and mobile visibility.
 - [x] Publish the visibility fix.
+
+# Braz Monkey Signal Page Update
+
+- [x] Remove the duplicate BRAZ MONKEY text from the Signal page hero.
+- [x] Verify and publish the Signal page update.
