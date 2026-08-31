@@ -8,7 +8,7 @@ const transmissions = [
     title: "MORNING TRANSMISSION",
     copy: "Braz wakes up on Earth and drops a quote or alien observation to start your week. Sharp. Honest. Weird.",
     cadence: "Every Monday",
-    image: "/manus-storage/braz-monkey-monday_1535a8f4.png",
+    image: "/manus-storage/moondaymondaymorningquote_a499a598.jpg",
     tone: "yellow",
   },
   {
@@ -17,7 +17,7 @@ const transmissions = [
     title: "GALAXY PREDICTIONS",
     copy: "An alien's take on sports bets and lotto picks. Braz shares a prediction from another galaxy—with the price.",
     cadence: "Every Wednesday",
-    image: "/manus-storage/braz-monkey-wednesday_3a215cb8.png",
+    image: "/manus-storage/UseAIImageJul3,2026,17_42_46_938911e9.jpeg",
     tone: "pink",
   },
   {
@@ -26,7 +26,7 @@ const transmissions = [
     title: "TGIF VINYL DROP",
     copy: "Old school records. Classic tracks. Every Friday, Braz spins a vinyl and tells the story behind it.",
     cadence: "Every Friday",
-    image: "/manus-storage/braz-monkey-friday_1ecd394c.png",
+    image: "/manus-storage/MIEKWERK1_b2e42f29.webp",
     tone: "red",
   },
 ];
@@ -115,7 +115,7 @@ export default function Home() {
 
       <main>
         <section id="signal" className="hero-section">
-          <div className="hero-art" style={{ backgroundImage: "url('/manus-storage/braz-monkey-hero_aa6a9528.png')" }} />
+          <div className="hero-art" style={{ backgroundImage: "url('/manus-storage/t12iticu_a8298428.jpg')" }} />
           <div className="hero-grid" />
           <div className="hero-copy">
             <p className="eyebrow">// TRANSMISSION INCOMING <span>FM 00.404</span></p>
@@ -149,11 +149,11 @@ export default function Home() {
 
         <section id="archive" className="section archive-section">
           <div className="section-heading"><div><p className="eyebrow">// SIGNAL ARCHIVE</p><h2>THE<br /><em>ARCHIVE</em></h2></div><p className="section-note">A record of everything Braz<br />has intercepted so far.</p></div>
-          <div className="archive-panel"><div className="archive-ring">◈<span>TRANSMISSION<br />ARCHIVE</span></div><div><p className="archive-code">ARCHIVE STATUS: RECEIVING</p><h3>THE SIGNAL<br /><em>NEVER STOPS.</em></h3><p>Browse the transmissions as they land. Visual fragments, late-night observations, and clues from the long way home.</p></div><button className="button button-ghost" onClick={() => jump("transmissions")}>BROWSE SIGNALS <span>→</span></button></div>
+          <div className="archive-panel"><div className="archive-ring archive-photo" style={{ backgroundImage: "url('/manus-storage/PHOTO-2026-05-30-16-36-06_4e30a110.jpg')" }}><span>TRANSMISSION<br />ARCHIVE</span></div><div><p className="archive-code">ARCHIVE STATUS: RECEIVING</p><h3>THE SIGNAL<br /><em>NEVER STOPS.</em></h3><p>Browse the transmissions as they land. Visual fragments, late-night observations, and clues from the long way home.</p></div><button className="button button-ghost" onClick={() => jump("transmissions")}>BROWSE SIGNALS <span>→</span></button></div>
         </section>
 
         <section id="follow" className="section follow-section">
-          <div className="follow-art" />
+          <div className="follow-art" style={{ backgroundImage: "url('/manus-storage/arcade_8f34d1f6.jpeg')" }} />
           <div className="follow-copy"><p className="eyebrow">// PICK UP THE SIGNAL</p><h2>FOLLOW THE<br /><em>JOURNEY</em></h2><p>Three transmissions a week. Every week. Braz is still figuring out this planet—follow along so you do not miss a signal.</p><div className="social-links"><a href="https://www.facebook.com/BRAZM0NKEY/" target="_blank" rel="noreferrer">FACEBOOK <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>YOUTUBE <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>INSTAGRAM <span>↗</span></a></div></div>
         </section>
       </main>
