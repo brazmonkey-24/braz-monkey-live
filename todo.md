@@ -63,3 +63,8 @@
 - [x] Restore the BRAZ MONKEY text on the Signal page hero.
 - [x] Add a stronger glitch effect to the hero text.
 - [x] Verify and publish the Signal page update.
+
+# Braz Monkey Logo Position Update
+
+- [x] Move the logo further into the top-left corner so it hangs over the navigation bar edge.
+- [x] Verify and publish the logo position update.
