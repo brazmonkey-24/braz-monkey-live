@@ -74,3 +74,9 @@
 - [x] Remove the black background from the BRAZ logo.
 - [x] Update the navigation logo asset.
 - [x] Verify and publish the logo update.
+
+# Braz Monkey Friday Image Update
+
+- [x] Upload the new Friday artwork.
+- [x] Update the Friday transmission card.
+- [x] Verify and publish the Friday image update.

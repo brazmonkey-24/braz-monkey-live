@@ -26,7 +26,7 @@ const transmissions = [
     title: "TGIF VINYL DROP",
     copy: "Old school records. Classic tracks. Every Friday, Braz spins a vinyl and tells the story behind it.",
     cadence: "Every Friday",
-    image: "/manus-storage/MIEKWERK1_b2e42f29.webp",
+    image: "/manus-storage/braz_monkey_no_text_338dba87.webp",
     tone: "red",
   },
 ];
