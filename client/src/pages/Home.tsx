@@ -68,7 +68,7 @@ export default function Home() {
 
       <header className={`site-header ${menuOpen ? "is-open" : ""}`}>
         <button className="brand" onClick={() => jump("signal")} aria-label="Back to Braz Monkey signal">
-          <span className="brand-mark"><img src="/manus-storage/braz-monkey-mark_99da4931.png" alt="" /></span>
+          <span className="brand-mark brand-banner"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /></span>
           <span className="brand-wordmark">BRAZ<br />MONKEY<i /></span>
         </button>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
@@ -127,7 +127,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="site-footer"><div className="footer-brand"><img src="/manus-storage/braz-monkey-mark_99da4931.png" alt="" /><span>BRAZ MONKEY</span></div><p>Still figuring out this planet. Follow along.</p><span>© 2026 BRAZ MONKEY UNIVERSE</span></footer>
+      <footer className="site-footer"><div className="footer-brand"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /><span>BRAZ MONKEY</span></div><p>Still figuring out this planet. Follow along.</p><span>© 2026 BRAZ MONKEY UNIVERSE</span></footer>
     </div>
   );
 }
