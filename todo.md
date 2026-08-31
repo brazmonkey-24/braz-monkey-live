@@ -26,3 +26,10 @@
 - [x] Style the pulsing live indicator to match the Signal Zine identity.
 - [x] Verify the navigation update in preview and production build.
 - [x] Publish the updated website.
+
+# Braz Monkey Persistent HOT 97 Player
+
+- [x] Identify a usable HOT 97 stream source or safe fallback.
+- [x] Add a fixed mini player that remains visible while scrolling.
+- [x] Add play/pause state, live indicator, and external HOT 97 link.
+- [x] Verify desktop and mobile behavior, then publish the update.

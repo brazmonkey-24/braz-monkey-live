@@ -63,6 +63,28 @@ function CursorFollower() {
   return <img ref={cursorRef} className="cursor-follower" src="/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png" alt="" aria-hidden="true" />;
 }
 
+function Hot97Player() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <aside className={`hot97-player ${expanded ? "is-expanded" : ""}`} aria-label="HOT 97 live player">
+      <button className="hot97-toggle" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
+        <span className="pulse-dot" />
+        <span>HOT 97 LIVE</span>
+      </button>
+      <div className="hot97-panel">
+        <iframe
+          title="HOT 97 live player"
+          src="https://mytuner-radio.com/widgets/player/?f=395120"
+          loading="lazy"
+          allow="autoplay; encrypted-media"
+        />
+        <a href="https://www.hot97.com/listen-live/" target="_blank" rel="noopener noreferrer">OPEN OFFICIAL PLAYER ↗</a>
+      </div>
+    </aside>
+  );
+}
+
 export default function Home() {
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,6 +109,7 @@ export default function Home() {
   return (
     <div className="site-shell">
       <CursorFollower />
+      <Hot97Player />
       <div className="ticker" aria-label="Braz Monkey transmission ticker">
         <div className="ticker-track">
           {Array.from({ length: 2 }).flatMap((_, repeat) =>
@@ -109,10 +132,6 @@ export default function Home() {
               <span>0{index + 1}</span>{id}
             </button>
           ))}
-          <a href="https://hot97.com" target="_blank" rel="noopener noreferrer" className="nav-hot97-link">
-            <span className="pulse-dot"></span>
-            Listen to HOT 97 Live
-          </a>
         </nav>
         <div className="header-status"><span className="live-dot" /> SIGNAL: LIVE</div>
       </header>
