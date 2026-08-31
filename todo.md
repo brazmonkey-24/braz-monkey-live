@@ -97,3 +97,8 @@
 - [x] Implement a background photo slideshow with all supplied images.
 - [x] Ensure all pictures fit correctly with responsive sizing.
 - [x] Verify and publish the slideshow update.
+
+# Braz Monkey Slideshow Size Update
+
+- [x] Reduce the slideshow size to 75% of its current scale.
+- [x] Verify and publish the slideshow size update.
