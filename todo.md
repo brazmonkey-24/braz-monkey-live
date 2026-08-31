@@ -85,3 +85,8 @@
 
 - [x] Adjust the logo size and position for full visibility.
 - [x] Verify and publish the logo visibility fix.
+
+# Braz Monkey HOT 97 Autoplay Update
+
+- [x] Add autoplay behavior to the HOT 97 player.
+- [x] Verify and publish the autoplay update.

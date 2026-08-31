@@ -68,6 +68,19 @@ function Hot97Player() {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  useEffect(() => {
+    const tryAutoplay = async () => {
+      if (!audioRef.current) return;
+      try {
+        await audioRef.current.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
+    };
+    tryAutoplay();
+  }, []);
+
   const togglePlayback = async () => {
     if (!audioRef.current) return;
     if (playing) {
