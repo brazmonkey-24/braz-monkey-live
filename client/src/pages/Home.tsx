@@ -109,6 +109,10 @@ export default function Home() {
               <span>0{index + 1}</span>{id}
             </button>
           ))}
+          <a href="https://hot97.com" target="_blank" rel="noopener noreferrer" className="nav-hot97-link">
+            <span className="pulse-dot"></span>
+            Listen to HOT 97 Live
+          </a>
         </nav>
         <div className="header-status"><span className="live-dot" /> SIGNAL: LIVE</div>
       </header>

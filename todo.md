@@ -19,3 +19,10 @@
 - [x] Add favicon links to the website metadata.
 - [x] Verify the favicon in the production build and live preview.
 - [x] Publish the favicon update.
+
+# Braz Monkey HOT 97 Navigation Update
+
+- [x] Add the HOT 97 live-listen link to the desktop and mobile navigation.
+- [x] Style the pulsing live indicator to match the Signal Zine identity.
+- [x] Verify the navigation update in preview and production build.
+- [x] Publish the updated website.
