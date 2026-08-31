@@ -80,3 +80,8 @@
 - [x] Upload the new Friday artwork.
 - [x] Update the Friday transmission card.
 - [x] Verify and publish the Friday image update.
+
+# Braz Monkey Logo Visibility Fix
+
+- [x] Adjust the logo size and position for full visibility.
+- [x] Verify and publish the logo visibility fix.
