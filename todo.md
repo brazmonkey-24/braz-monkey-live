@@ -46,3 +46,9 @@
 - [x] Remove duplicate BRAZ MONKEY text from the transmission page.
 - [x] Add a stronger glitch treatment to the hero.
 - [x] Verify and publish the update.
+
+# Braz Monkey Logo Visibility Fix
+
+- [x] Raise the larger logo above the header and hero layers.
+- [x] Verify desktop and mobile visibility.
+- [x] Publish the visibility fix.
