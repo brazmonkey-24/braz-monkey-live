@@ -39,3 +39,10 @@
 - [x] Find and validate a direct HOT 97 audio stream URL.
 - [x] Replace the embedded widget with a direct audio player and visible controls.
 - [x] Verify play/pause behavior and publish the fix.
+
+# Braz Monkey Navigation Branding Update
+
+- [x] Make the navigation logo larger and position it outside the header raster.
+- [x] Remove duplicate BRAZ MONKEY text from the transmission page.
+- [x] Add a stronger glitch treatment to the hero.
+- [x] Verify and publish the update.

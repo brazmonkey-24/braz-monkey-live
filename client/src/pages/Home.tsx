@@ -137,7 +137,6 @@ export default function Home() {
       <header className={`site-header ${menuOpen ? "is-open" : ""}`}>
         <button className="brand" onClick={() => jump("signal")} aria-label="Back to Braz Monkey signal">
           <span className="brand-mark brand-banner"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /></span>
-          <span className="brand-wordmark">BRAZ<br />MONKEY<i /></span>
         </button>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
@@ -154,9 +153,9 @@ export default function Home() {
         <section id="signal" className="hero-section">
           <div className="hero-art" style={{ backgroundImage: "url('/manus-storage/t12iticu_a8298428.jpg')" }} />
           <div className="hero-grid" />
+          <div className="hero-glitch" />
           <div className="hero-copy">
             <p className="eyebrow">// TRANSMISSION INCOMING <span>FM 00.404</span></p>
-            <h1>BRAZ<br /><em>MONKEY</em></h1>
             <p className="hero-sub">NO PAST. <strong>JUST SIGNAL.</strong></p>
             <p className="hero-description">An alien with no origin, no history. Just landed on Earth and trying to figure it all out—one Monday quote, one bet, one vinyl record at a time.</p>
             <div className="hero-actions"><button className="button button-primary" onClick={() => jump("transmissions")}>FOLLOW THE SIGNAL <span>↗</span></button><button className="button button-ghost" onClick={() => jump("origin")}>THE STORY <span>→</span></button></div>
