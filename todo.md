@@ -8,7 +8,14 @@
 
 # Braz Monkey Public Launch
 
-- [ ] Publish the latest verified website checkpoint.
-- [ ] Verify the Manus live domain loads the updated site.
-- [ ] Verify the GoDaddy DNS records point to the Manus domain.
-- [ ] Confirm `www.braz-monkey.com` and `braz-monkey.com` reach the website.
+- [x] Publish the latest verified website checkpoint.
+- [x] Verify the Manus live domain loads the updated site.
+- [x] Verify the GoDaddy DNS records point to the Manus domain.
+- [x] Confirm `www.braz-monkey.com` reaches the website; root-domain forwarding remains the remaining GoDaddy step.
+
+# Braz Monkey Favicon Update
+
+- [x] Prepare the supplied diamond logo as browser favicon assets.
+- [x] Add favicon links to the website metadata.
+- [x] Verify the favicon in the production build and live preview.
+- [x] Publish the favicon update.
