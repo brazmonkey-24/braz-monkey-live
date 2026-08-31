@@ -68,3 +68,9 @@
 
 - [x] Move the logo further into the top-left corner so it hangs over the navigation bar edge.
 - [x] Verify and publish the logo position update.
+
+# Braz Monkey Logo Background Removal
+
+- [x] Remove the black background from the BRAZ logo.
+- [x] Update the navigation logo asset.
+- [x] Verify and publish the logo update.

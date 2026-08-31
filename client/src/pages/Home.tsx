@@ -136,7 +136,7 @@ export default function Home() {
 
       <header className={`site-header ${menuOpen ? "is-open" : ""}`}>
         <button className="brand" onClick={() => jump("signal")} aria-label="Back to Braz Monkey signal">
-          <span className="brand-mark brand-banner"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /></span>
+          <span className="brand-mark brand-banner"><img src="/manus-storage/braz-monkey-banner-alpha_0cbb9178.png" alt="BRAZ MONKEY" /></span>
         </button>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
