@@ -123,6 +123,13 @@
 - [x] Reduce the homepage background image scale by 50%.
 - [x] Verify and publish the background scale update.
 
+# Braz Monkey Background Blend Update
+
+- [x] Soften the homepage background image so it blends without a hard edge.
+- [x] Remove the white background from the hero image.
+- [x] Shift the background image slightly to the right.
+- [x] Verify and publish the background blend update.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.
