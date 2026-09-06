@@ -135,6 +135,12 @@
 - [x] Restore the original canonface background with its full image area.
 - [x] Verify and publish the background restoration.
 
+# Braz Monkey Follow Artwork Cleanup
+
+- [x] Remove the white background and black text from the Michelangelo artwork.
+- [x] Apply the cleaned artwork to the Follow the Journey section.
+- [x] Verify and publish the follow-section update.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.
