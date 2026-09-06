@@ -191,3 +191,8 @@
 - [x] Remove the disclaimer panel from the Blackbook section.
 - [x] Add a disclaimer button to the footer that opens the disclaimer text.
 - [x] Verify and publish the disclaimer relocation.
+
+# Braz Monkey Social Links
+
+- [x] Wire the real YouTube (youtube.com/@13VIERENTWINTIG) and Instagram (instagram.com/brazm0nkey) links into the Follow the Journey section.
+- [x] Verify and publish the social links update.
