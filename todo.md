@@ -156,7 +156,7 @@
 
 # Braz Monkey Desktop Map
 
-- [ ] Build a desktop map with the full project, assets, and a startup command.
+- [x] Build a desktop map with the full project, assets, and a startup command. (BRAZ-MONKEY-DESKTOP.zip delivered)
 
 # Braz Monkey Interactive Blackbook
 
@@ -184,5 +184,10 @@
 
 # Braz Monkey Slideshow Picture Review
 
-- [ ] Create numbered contact sheets showing every slideshow picture.
-- [ ] Deliver the sheets so the user can choose which pictures to delete.
+- [x] Slideshow contact-sheet review — superseded: the slideshow was removed and replaced with the single canonface background, so no sheets were needed.
+
+# Braz Monkey Disclaimer Relocation
+
+- [x] Remove the disclaimer panel from the Blackbook section.
+- [x] Add a disclaimer button to the footer that opens the disclaimer text.
+- [x] Verify and publish the disclaimer relocation.

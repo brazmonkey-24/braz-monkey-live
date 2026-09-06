@@ -395,16 +395,6 @@ export default function Home() {
             <div className="blackbook-actions">
               <button className="button button-primary" onClick={() => setBlackbookOpen(!blackbookOpen)}>LEAVE A TAG <span>↗</span></button>
               <button className="button button-ghost" onClick={() => fileInputRef.current?.click()}>UPLOAD GRAFFITI <span>→</span></button>
-              <button className="button button-ghost disclaimer-toggle" type="button" onClick={() => setDisclaimerOpen(!disclaimerOpen)} aria-expanded={disclaimerOpen}>DISCLAIMER <span>?</span></button>
-            </div>
-          </div>
-          <div className={`disclaimer-panel ${disclaimerOpen ? "is-open" : ""}`} aria-hidden={!disclaimerOpen}>
-            <div className="disclaimer-content">
-              <h4>Disclaimer</h4>
-              <p><strong>1. Promotional and Informational Use Only</strong><br />All content, information, and materials provided on this website are for promotional and general informational purposes only. The information is not intended to be, and should not be taken as, professional, legal, financial, or medical advice. [1] (https://www.webador.com/blog/privacy-cookies-and-more-is-your-website-legally-compliant/), [2] (https://www.iubenda.com/en/blog/disclaimer-examples/), [3] (https://qodeinteractive.com/magazine/must-have-legal-pages-for-any-wordpress-website/)</p>
-              <p><strong>2. No Warranties (Use at Your Own Risk)</strong><br />While I try to provide accurate information, I make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, or suitability of the information contained on this website. Any reliance you place on such information is strictly at your own risk. [1] (https://www.linkedin.com/pulse/how-legal-disclaimers-work-websites-colin-a-ward-6073491882632048640), [2] (https://www.webador.com/blog/privacy-cookies-and-more-is-your-website-legally-compliant/)</p>
-              <p><strong>3. Limitation of Liability</strong><br />In no event will I be held liable for any loss or damage, including without limitation, indirect or consequential loss or damage, arising from or in connection with the use of this website. You are solely responsible for any actions you take based on the information provided on this website. [1] (https://termly.io/faq/do-i-need-a-disclaimer-on-my-website/), [2] (https://www.linkedin.com/pulse/how-legal-disclaimers-work-websites-colin-a-ward-6073491882632048640), [3] (https://usercentrics.com/guides/website-disclaimers/disclaimer-examples/)</p>
-              <p><strong>4. External Links</strong><br />Through this website, you may be able to link to other websites which are not under my control. I have no control over the nature, content, and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
             </div>
           </div>
 
@@ -452,7 +442,21 @@ export default function Home() {
 
       {lightbox && <BlackbookLightbox url={lightbox.url} tag={lightbox.tag} onClose={() => setLightbox(null)} />}
 
-      <footer className="site-footer"><div className="footer-brand"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /><span>BRAZ MONKEY</span></div><p>Still figuring out this planet. Follow along.</p><span>© 2026 BRAZ MONKEY UNIVERSE</span></footer>
+      <footer className="site-footer">
+        <div className="footer-brand"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /><span>BRAZ MONKEY</span></div>
+        <p>Still figuring out this planet. Follow along.</p>
+        <button type="button" className="footer-disclaimer-toggle" onClick={() => setDisclaimerOpen(!disclaimerOpen)} aria-expanded={disclaimerOpen}>DISCLAIMER <span>?</span></button>
+        <span>© 2026 BRAZ MONKEY UNIVERSE</span>
+      </footer>
+      <div className={`footer-disclaimer-panel ${disclaimerOpen ? "is-open" : ""}`} aria-hidden={!disclaimerOpen}>
+        <div className="disclaimer-content">
+          <h4>Disclaimer</h4>
+          <p><strong>1. Promotional and Informational Use Only</strong><br />All content, information, and materials provided on this website are for promotional and general informational purposes only. The information is not intended to be, and should not be taken as, professional, legal, financial, or medical advice.</p>
+          <p><strong>2. No Warranties (Use at Your Own Risk)</strong><br />While I try to provide accurate information, I make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, or suitability of the information contained on this website. Any reliance you place on such information is strictly at your own risk.</p>
+          <p><strong>3. Limitation of Liability</strong><br />In no event will I be held liable for any loss or damage, including without limitation, indirect or consequential loss or damage, arising from or in connection with the use of this website. You are solely responsible for any actions you take based on the information provided on this website.</p>
+          <p><strong>4. External Links</strong><br />Through this website, you may be able to link to other websites which are not under my control. I have no control over the nature, content, and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
+        </div>
+      </div>
     </div>
   );
 }
