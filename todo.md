@@ -196,3 +196,8 @@
 
 - [x] Wire the real YouTube (youtube.com/@13VIERENTWINTIG) and Instagram (instagram.com/brazm0nkey) links into the Follow the Journey section.
 - [x] Verify and publish the social links update.
+
+# Braz Monkey Archive Video
+
+- [x] Embed the latest YouTube video (WAKE UP 21 april 2018 — xEF0hudLJBI) in the Archive section.
+- [x] Verify and publish the archive update.
