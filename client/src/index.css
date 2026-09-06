@@ -100,3 +100,4 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 @media (pointer: fine) { body,button,a { cursor:none; } }
 @media (pointer: coarse) { body,button,a { cursor:auto; } .cursor-follower { display:none; } }
 @media (prefers-reduced-motion: reduce) { .cursor-follower { transition:none; } html{scroll-behavior:auto}.ticker-track,.live-dot,.pulse-dot{animation:none}.transmission-card,.card-image img,.button,.main-nav button,.nav-hot97-link{transition:none} }
+@media (prefers-reduced-motion: reduce) { .cursor-follower { transition:none; } html{scroll-behavior:auto}.ticker-track,.live-dot,.pulse-dot{animation:none}.transmission-card,.card-image img,.button,.main-nav button,.nav-hot97-link{transition:none} }

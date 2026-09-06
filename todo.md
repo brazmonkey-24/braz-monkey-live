@@ -148,6 +148,12 @@
 - [x] Apply the silhouette artwork with a black scratch vignette to the Follow the Journey section.
 - [x] Verify and publish the background update.
 
+# Braz Monkey Cursor Size and Speed Update
+
+- [x] Make the cursor logo 20% larger on touch/click.
+- [x] Scale the cursor logo with pointer speed.
+- [x] Verify and publish the cursor update.
+
 # Braz Monkey Follow Artwork Cleanup
 
 - [x] Remove the white background and black text from the Michelangelo artwork.
