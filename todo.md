@@ -142,6 +142,12 @@
 - [x] Replace the Follow the Journey background with the Kunst=Leuk artwork and add a vignette.
 - [x] Verify and publish the combined update.
 
+# Braz Monkey Background Restoration and Silhouette Update
+
+- [x] Restore the original canonface homepage background.
+- [x] Apply the silhouette artwork with a black scratch vignette to the Follow the Journey section.
+- [x] Verify and publish the background update.
+
 # Braz Monkey Follow Artwork Cleanup
 
 - [x] Remove the white background and black text from the Michelangelo artwork.
