@@ -226,3 +226,10 @@
 
 - [x] Add cap size and can pressure controls to the spray sketchbook.
 - [x] Verify and publish the spray controls update.
+
+# Braz Monkey Ghoulish Ad
+
+- [x] Remove the black background from the GHOULISH logo.
+- [x] Build the advertising spot with a large logo and inverse cursor parallax.
+- [ ] Wire the real link when provided.
+- [x] Verify and publish the advertising spot.

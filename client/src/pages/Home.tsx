@@ -44,6 +44,8 @@ const archiveVideos = [
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow", "blackbook"];
 
+const GHOULISH_URL = "https://ghoulish.example.com"; // TODO: replace with the real link when provided
+
 const SPRAY_COLORS = [
   "#f5e642", "#ffb400", "#ff5c4d", "#ff3e8a", "#b04dff", "#6a5cff",
   "#3e8cff", "#7ec8ff", "#2ee6c8", "#3ddc54", "#a3e635", "#f0eee4",
@@ -308,6 +310,32 @@ function BlackbookLightbox({ url, tag, onClose }: { url: string; tag: string; on
       <p>{tag}</p>
       <button type="button" className="blackbook-lightbox-close" onClick={onClose} aria-label="Close">×</button>
     </div>
+  );
+}
+
+function GhoulishAd() {
+  const logoRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const handleMove = (event: PointerEvent) => {
+      if (!logoRef.current) return;
+      const { innerWidth, innerHeight } = window;
+      // Inverse parallax: move opposite to cursor, larger amplitude
+      const x = (innerWidth / 2 - event.clientX) / 18;
+      const y = (innerHeight / 2 - event.clientY) / 18;
+      logoRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    };
+    window.addEventListener("pointermove", handleMove, { passive: true });
+    return () => window.removeEventListener("pointermove", handleMove);
+  }, []);
+
+  return (
+    <section id="ghoulish-ad" className="ghoulish-ad" aria-label="Ghoulish advertising">
+      <a ref={logoRef} href={GHOULISH_URL} target="_blank" rel="noreferrer" className="ghoulish-link">
+        <img src="/manus-storage/ghoulish-logo-transparent_224a28da.png" alt="GHOULISH — www.ghoulish.com" className="ghoulish-logo" />
+      </a>
+      <p className="ghoulish-tag">PRESENTED BY GHOULISH</p>
+    </section>
   );
 }
 
@@ -608,6 +636,7 @@ export default function Home() {
           )}
           <SprayCanvas onPost={postSpray} posting={sprayMutation.isPending} />
         </section>
+        <GhoulishAd />
       </main>
 
       {lightbox && <BlackbookLightbox url={lightbox.url} tag={lightbox.tag} onClose={() => setLightbox(null)} />}
