@@ -201,3 +201,8 @@
 
 - [x] Embed the latest YouTube video (WAKE UP 21 april 2018 — xEF0hudLJBI) in the Archive section.
 - [x] Verify and publish the archive update.
+
+# Braz Monkey Scrollable Archive
+- [x] Fetch the channel video list with titles.
+- [x] Build the scrollable archive strip with playable videos.
+- [x] Verify and publish the scrollable archive.
