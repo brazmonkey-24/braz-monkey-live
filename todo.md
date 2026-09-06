@@ -113,6 +113,11 @@
 - [x] Embed the provided YouTube video in the archive section.
 - [x] Verify and publish the archive update.
 
+# Braz Monkey Follow QR Background Update
+
+- [x] Upload and apply the QR background image to the Follow the Journey section.
+- [x] Verify and publish the follow-section update.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.

@@ -207,7 +207,7 @@ export default function Home() {
         </section>
 
         <section id="follow" className="section follow-section">
-          <div className="follow-art" style={{ backgroundImage: "url('/manus-storage/arcade_8f34d1f6.jpeg')" }} />
+          <div className="follow-art" style={{ backgroundImage: "url('/manus-storage/braz_monkey_FIXEDQR_879fb0d2.png')" }} />
           <div className="follow-copy"><p className="eyebrow">// PICK UP THE SIGNAL</p><h2>FOLLOW THE<br /><em>JOURNEY</em></h2><p>Three transmissions a week. Every week. Braz is still figuring out this planet—follow along so you do not miss a signal.</p><div className="social-links"><a href="https://www.facebook.com/BRAZM0NKEY/" target="_blank" rel="noreferrer">FACEBOOK <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>YOUTUBE <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>INSTAGRAM <span>↗</span></a></div></div>
         </section>
       </main>
