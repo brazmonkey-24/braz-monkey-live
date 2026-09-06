@@ -207,8 +207,29 @@ export default function Home() {
         </section>
 
         <section id="follow" className="section follow-section">
-          <div className="follow-art" style={{ backgroundImage: "url('/manus-storage/follow-artwork-clean_023d44cc.png')" }} />
+          <div className="follow-art" style={{ backgroundImage: "url('/manus-storage/follow-artwork-vignette_ed6e626d.png')" }} />
           <div className="follow-copy"><p className="eyebrow">// PICK UP THE SIGNAL</p><h2>FOLLOW THE<br /><em>JOURNEY</em></h2><p>Three transmissions a week. Every week. Braz is still figuring out this planet—follow along so you do not miss a signal.</p><div className="social-links"><a href="https://www.facebook.com/BRAZM0NKEY/" target="_blank" rel="noreferrer">FACEBOOK <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>YOUTUBE <span>↗</span></a><a href="#follow" onClick={(event) => event.preventDefault()}>INSTAGRAM <span>↗</span></a></div></div>
+        </section>
+
+        <section id="blackbook" className="section blackbook-section">
+          <div className="section-heading"><div><p className="eyebrow">// BLACKBOOK</p><h2>LEAVE YOUR<br /><em>TAG</em></h2></div><p className="section-note">A personal sketchbook for graffiti writers to practice lettering, test color schemes, and develop new design concepts before painting them on public or legal surfaces.</p></div>
+          <div className="blackbook-panel">
+            <div className="blackbook-copy"><p className="eyebrow">// BLACKBOOK</p><h3>LEAVE YOUR<br /><em>MARK.</em></h3><p>Leave your tag or upload your graffiti of Braz Monkey. This is a personal sketchbook for practice, color tests, and new concepts.</p></div>
+            <div className="blackbook-actions">
+              <button className="button button-primary">LEAVE A TAG <span>↗</span></button>
+              <button className="button button-ghost">UPLOAD GRAFFITI <span>→</span></button>
+              <button className="button button-ghost disclaimer-toggle" type="button" aria-expanded="false">DISCLAIMER <span>?</span></button>
+            </div>
+          </div>
+          <div className="disclaimer-panel" aria-hidden="true">
+            <div className="disclaimer-content">
+              <h4>Disclaimer</h4>
+              <p><strong>1. Promotional and Informational Use Only</strong><br />All content, information, and materials provided on this website are for promotional and general informational purposes only. The information is not intended to be, and should not be taken as, professional, legal, financial, or medical advice. [1] (https://www.webador.com/blog/privacy-cookies-and-more-is-your-website-legally-compliant/), [2] (https://www.iubenda.com/en/blog/disclaimer-examples/), [3] (https://qodeinteractive.com/magazine/must-have-legal-pages-for-any-wordpress-website/)</p>
+              <p><strong>2. No Warranties (Use at Your Own Risk)</strong><br />While I try to provide accurate information, I make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, or suitability of the information contained on this website. Any reliance you place on such information is strictly at your own risk. [1] (https://www.linkedin.com/pulse/how-legal-disclaimers-work-websites-colin-a-ward-6073491882632048640), [2] (https://www.webador.com/blog/privacy-cookies-and-more-is-your-website-legally-compliant/)</p>
+              <p><strong>3. Limitation of Liability</strong><br />In no event will I be held liable for any loss or damage, including without limitation, indirect or consequential loss or damage, arising from or in connection with the use of this website. You are solely responsible for any actions you take based on the information provided on this website. [1] (https://termly.io/faq/do-i-need-a-disclaimer-on-my-website/), [2] (https://www.linkedin.com/pulse/how-legal-disclaimers-work-websites-colin-a-ward-6073491882632048640), [3] (https://usercentrics.com/guides/website-disclaimers/disclaimer-examples/)</p>
+              <p><strong>4. External Links</strong><br />Through this website, you may be able to link to other websites which are not under my control. I have no control over the nature, content, and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
+            </div>
+          </div>
         </section>
       </main>
 

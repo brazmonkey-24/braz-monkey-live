@@ -44,7 +44,19 @@ button:focus-visible,a:focus-visible { outline:2px solid var(--yellow); outline-
 .live-dot { width:7px; height:7px; border-radius:50%; background:var(--red); box-shadow:0 0 0 4px rgba(255,92,77,.15); animation:pulse 1.8s ease-in-out infinite; }
 .menu-toggle { display:none; margin-left:auto; background:none; color:var(--yellow); font-size:25px; }
 .hero-section { position:relative; display:flex; align-items:center; min-height:780px; padding:150px 8vw 95px; isolation:isolate; }
-.hero-art { position:absolute; inset:0; z-index:-3; background-position:calc(50% + 2vw) center; background-size:50% 50%; background-repeat:no-repeat; filter:saturate(.86) contrast(1.06); }
+.hero-art { position:absolute; inset:0; z-index:-3; background-position:calc(50% + 2vw) center; background-size:75% 75%; background-repeat:no-repeat; filter:saturate(.86) contrast(1.06); }
+.blackbook-section { background:#0c0d0c; border-top:1px solid var(--line); }
+.blackbook-panel { display:grid; grid-template-columns:1fr auto; align-items:center; gap:5vw; padding:48px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.blackbook-copy h3 { margin-bottom:20px; color:var(--paper); font-size:clamp(48px,7vw,100px); }
+.blackbook-copy p:not(.eyebrow) { max-width:520px; color:rgba(240,238,228,.58); font-size:12px; line-height:1.8; }
+.blackbook-actions { display:flex; flex-direction:column; gap:14px; align-items:flex-end; }
+.disclaimer-toggle { position:relative; }
+.disclaimer-panel { max-height:0; overflow:hidden; transition:max-height .3s ease, opacity .3s ease; opacity:0; }
+.disclaimer-panel.is-open { max-height:1200px; opacity:1; }
+.disclaimer-content { margin-top:30px; padding:28px; border:1px solid rgba(245,230,66,.18); background:rgba(0,0,0,.35); }
+.disclaimer-content h4 { margin:0 0 16px; color:var(--yellow); font-family:'Bebas Neue',sans-serif; font-size:34px; letter-spacing:.06em; }
+.disclaimer-content p { margin:0 0 18px; color:rgba(240,238,228,.7); font-size:11px; line-height:1.8; }
+.disclaimer-content p:last-child { margin-bottom:0; }
 .follow-art { position:absolute; inset:0; z-index:-3; background-position:center; background-size:cover; filter:saturate(.86) contrast(1.06); }
 .hero-art::after,.follow-art::after { position:absolute; inset:0; content:''; background:linear-gradient(90deg, #090a09 5%, rgba(9,10,9,.9) 32%, rgba(9,10,9,.23) 75%, rgba(9,10,9,.5)), linear-gradient(0deg, #090a09, transparent 25%, rgba(9,10,9,.2)); }
 .hero-grid { position:absolute; inset:0; z-index:-2; opacity:.25; background-image:linear-gradient(rgba(240,238,228,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(240,238,228,.07) 1px,transparent 1px); background-size:74px 74px; mask-image:linear-gradient(90deg,#000,transparent 75%); }

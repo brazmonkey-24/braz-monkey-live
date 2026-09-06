@@ -135,6 +135,13 @@
 - [x] Restore the original canonface background with its full image area.
 - [x] Verify and publish the background restoration.
 
+# Braz Monkey Blackbook Restoration
+
+- [x] Restore the blackbook section with a disclaimer button.
+- [x] Enlarge the homepage background by 50%.
+- [x] Replace the Follow the Journey background with the Kunst=Leuk artwork and add a vignette.
+- [x] Verify and publish the combined update.
+
 # Braz Monkey Follow Artwork Cleanup
 
 - [x] Remove the white background and black text from the Michelangelo artwork.
