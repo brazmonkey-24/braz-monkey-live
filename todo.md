@@ -142,11 +142,6 @@
 - [x] Replace the Follow the Journey background with the Kunst=Leuk artwork and add a vignette.
 - [x] Verify and publish the combined update.
 
-# Braz Monkey Background Position Update
-
-- [x] Move the homepage background picture 20% to the right.
-- [x] Verify and publish the background position update.
-
 # Braz Monkey Follow Artwork Cleanup
 
 - [x] Remove the white background and black text from the Michelangelo artwork.
