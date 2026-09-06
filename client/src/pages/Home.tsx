@@ -445,7 +445,15 @@ export default function Home() {
       <footer className="site-footer">
         <div className="footer-brand"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /><span>BRAZ MONKEY</span></div>
         <p>Still figuring out this planet. Follow along.</p>
-        <button type="button" className="footer-disclaimer-toggle" onClick={() => setDisclaimerOpen(!disclaimerOpen)} aria-expanded={disclaimerOpen}>DISCLAIMER <span>?</span></button>
+        <button type="button" className="footer-disclaimer-toggle" onClick={() => {
+          const next = !disclaimerOpen;
+          setDisclaimerOpen(next);
+          if (next) {
+            requestAnimationFrame(() => {
+              document.querySelector(".footer-disclaimer-panel")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+          }
+        }} aria-expanded={disclaimerOpen}>{disclaimerOpen ? "HIDE DISCLAIMER" : "DISCLAIMER"} <span>{disclaimerOpen ? "−" : "?"}</span></button>
         <span>© 2026 BRAZ MONKEY UNIVERSE</span>
       </footer>
       <div className={`footer-disclaimer-panel ${disclaimerOpen ? "is-open" : ""}`} aria-hidden={!disclaimerOpen}>
