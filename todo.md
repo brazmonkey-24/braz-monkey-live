@@ -102,3 +102,13 @@
 
 - [x] Reduce the slideshow size to 75% of its current scale.
 - [x] Verify and publish the slideshow size update.
+
+# Braz Monkey Canonface Background Update
+
+- [x] Replace the background slideshow with the canonface image.
+- [x] Verify and publish the canonface background update.
+
+# Braz Monkey Slideshow Picture Review
+
+- [ ] Create numbered contact sheets showing every slideshow picture.
+- [ ] Deliver the sheets so the user can choose which pictures to delete.

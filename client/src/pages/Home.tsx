@@ -31,56 +31,7 @@ const transmissions = [
   },
 ];
 
-const heroSlides = [
-  { img: "/manus-storage/t12iticu_19510780.jpg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/di_b43a1dbd.jpeg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/amsterdam_7bd6f7e7.jpeg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/arcade_1017b908.jpeg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/Bigllogo_f3678dc6.jpg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/wk_a7298078.jpeg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/GROEPSFOTOTANTERITAENHENK_9160de22.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/AQMt49NArJtzMGIQa7D8LvW9R3ecL5FjhLl3OPaU2AvVMZ8zv_7Ckl7yHWhyFUZIJzhrknwvU04ogk15srZaxceYLAGSq04pR2C4rQiwWz3sr0l8cqAKK_zxTQGeifc2_6ba9b062.jpeg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/brazmei_6eaa2388.jpeg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/Dutch_8a30d871.jpeg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/di2_12ba741e.jpeg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/HUISWAPEN_ba21c7a8.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/AQOkQajUVKRtbzkYhYTJ0TiXLblwpSMS-i3ghuAkl2x8Z8ErcaZ3FKiBkb_GBnMlz_gAjdBWwCdSil5L2cFC_j_D_o5yGOUN3IUPwGw30ukdmAbyZSoTlc6FSKgN8Sts_770cb491.jpeg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/canonface_30853db0.jpeg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/logoalmere_a7f5512e.jpg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/MIEK(1)_a7acfb89.jpg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/brzmonkey_f85fe383.jpeg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/BMPNG_ca0d8c85.jpeg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/epocelips12082026_2f02031c.jpg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/BZ_f61d7b34.jpg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/RAPSHOPlogo_49cdd576.jpeg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/MIEK_150e83ec.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/PAMETZIJNBROERSENZUSSEN_dc8e1b85.jpg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/PA_9c73fe5b.jpg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/braz1mei_34af9c0a.jpg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/MIJNOMAENOPAHUIS_9ddc7edd.jpg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/MAMSHUISRIJKHOFF_a3c79ea3.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/PHOTO-2026-05-30-16-36-06_f284248e.jpg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/HUISFAMILLIeFOTO_756566a4.jpg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/sabloon_easy_a_as_a_202605072206_3883b813.jpeg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/ASOLFHIJSFEIL_3e7d7691.jpg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/AMSTEL.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/AYR1Iscobberdebonki_659daab4.jpg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/Almereanzichtkaar_07a10053.jpg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/moondaymondaymorningquote_8aa0fdc2.jpg", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/EUGAI1_59ff0394.jpeg", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/EUG_9320311f.jpg", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/UseAIImageJul3,2026,17_42_46_d31e5e70.jpeg", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/firstai_d338796b.jpg", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/Miekwerk2_ef0903f3.webp", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/miekwerk3_fed5cebf.webp", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/MIEKWERK1_d93d0695.webp", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/IMG_4100_afd3f086.webp", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-  { img: "/manus-storage/IMG_409_daafa2c7.webp", sub: "NO ENEMIES.", desc: "No past means no enemies. No origin means no limits." },
-  { img: "/manus-storage/IMG_4099_1a84d74a.webp", sub: "FINDING ROOTS.", desc: "Old school records. Classic tracks. This is where his roots might be." },
-  { img: "/manus-storage/make_make_a4_stencel_of_202605072239_7b081372.webp", sub: "NO PAST.", desc: "An alien with no origin, no history. Just landed on Earth and trying to figure it all out." },
-  { img: "/manus-storage/chaca2_dfd4498d.webp", sub: "NO ROOTS.", desc: "No spaceship. No manual. No idea what a Monday is." },
-  { img: "/manus-storage/chaca_ba26f5a4.webp", sub: "JUST A SIGNAL.", desc: "Every week he transmits what he finds — quotes, predictions, vinyl." },
-];
+const heroBackground = "/manus-storage/canonface_30853db0.jpeg";
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow"];
 
@@ -166,12 +117,6 @@ function Hot97Player() {
 export default function Home() {
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [slide, setSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => setSlide((current) => (current + 1) % heroSlides.length), 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -221,18 +166,13 @@ export default function Home() {
 
       <main>
         <section id="signal" className="hero-section">
-          <div className="hero-slideshow">
-            {heroSlides.map((item, index) => (
-              <div key={item.img} className={`hero-slide ${index === slide ? "active" : ""}`} style={{ backgroundImage: `url('${item.img}')` }} />
-            ))}
-          </div>
+          <div className="hero-art" style={{ backgroundImage: `url('${heroBackground}')` }} />
           <div className="hero-grid" />
           <div className="hero-glitch" />
           <div className="hero-copy">
             <p className="eyebrow">// TRANSMISSION INCOMING <span>FM 00.404</span></p>
             <h1 className="glitch-title" data-text="BRAZ MONKEY">BRAZ<br /><em>MONKEY</em></h1>
-            <p className="hero-sub">{heroSlides[slide].sub}</p>
-            <p className="hero-description">{heroSlides[slide].desc}</p>
+            <p className="hero-description">An alien with no origin, no history. Just landed on Earth and trying to figure it all out—one Monday quote, one bet, one vinyl record at a time.</p>
             <div className="hero-actions"><button className="button button-primary" onClick={() => jump("transmissions")}>FOLLOW THE SIGNAL <span>↗</span></button><button className="button button-ghost" onClick={() => jump("origin")}>THE STORY <span>→</span></button></div>
           </div>
           <div className="hero-index"><span>01</span><i />05</div>
