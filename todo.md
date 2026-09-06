@@ -206,3 +206,8 @@
 - [x] Fetch the channel video list with titles.
 - [x] Build the scrollable archive strip with playable videos.
 - [x] Verify and publish the scrollable archive.
+
+# Braz Monkey Blackbook Copy
+
+- [x] Remove the LEAVE YOUR MARK heading from the Blackbook panel.
+- [x] Verify and publish the update.

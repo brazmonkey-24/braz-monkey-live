@@ -414,7 +414,7 @@ export default function Home() {
         <section id="blackbook" className="section blackbook-section">
           <div className="section-heading"><div><p className="eyebrow">// BLACKBOOK</p><h2>LEAVE YOUR<br /><em>TAG</em></h2></div><p className="section-note">A personal sketchbook for graffiti writers to practice lettering, test color schemes, and develop new design concepts before painting them on public or legal surfaces.</p></div>
           <div className="blackbook-panel">
-            <div className="blackbook-copy"><p className="eyebrow">// BLACKBOOK</p><h3>LEAVE YOUR<br /><em>MARK.</em></h3><p>Leave your tag or upload your graffiti of Braz Monkey. This is a personal sketchbook for practice, color tests, and new concepts.</p></div>
+            <div className="blackbook-copy"><p className="eyebrow">// BLACKBOOK</p><p>Leave your tag or upload your graffiti of Braz Monkey. This is a personal sketchbook for practice, color tests, and new concepts.</p></div>
             <div className="blackbook-actions">
               <button className="button button-primary" onClick={() => setBlackbookOpen(!blackbookOpen)}>LEAVE A TAG <span>↗</span></button>
               <button className="button button-ghost" onClick={() => fileInputRef.current?.click()}>UPLOAD GRAFFITI <span>→</span></button>
