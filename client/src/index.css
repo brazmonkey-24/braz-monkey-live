@@ -44,7 +44,7 @@ button:focus-visible,a:focus-visible { outline:2px solid var(--yellow); outline-
 .live-dot { width:7px; height:7px; border-radius:50%; background:var(--red); box-shadow:0 0 0 4px rgba(255,92,77,.15); animation:pulse 1.8s ease-in-out infinite; }
 .menu-toggle { display:none; margin-left:auto; background:none; color:var(--yellow); font-size:25px; }
 .hero-section { position:relative; display:flex; align-items:center; min-height:780px; padding:150px 8vw 95px; isolation:isolate; }
-.hero-art { position:absolute; inset:0; z-index:-3; background-position:calc(50% + 2vw) center; background-size:75% 75%; background-repeat:no-repeat; filter:saturate(.86) contrast(1.06); }
+.hero-art { position:absolute; inset:0; z-index:-3; background-position:calc(50% + 20%) center; background-size:75% 75%; background-repeat:no-repeat; filter:saturate(.86) contrast(1.06); }
 .blackbook-section { background:#0c0d0c; border-top:1px solid var(--line); }
 .blackbook-panel { display:grid; grid-template-columns:1fr auto; align-items:center; gap:5vw; padding:48px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 .blackbook-copy h3 { margin-bottom:20px; color:var(--paper); font-size:clamp(48px,7vw,100px); }
