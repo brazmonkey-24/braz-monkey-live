@@ -231,5 +231,5 @@
 
 - [x] Remove the black background from the GHOULISH logo.
 - [x] Build the advertising spot with a large logo and inverse cursor parallax.
-- [ ] Wire the real link when provided.
+- [x] Wire the real link (ghoulishproductions.com/productos/alien-richer/) into the GHOULISH ad logo.
 - [x] Verify and publish the advertising spot.

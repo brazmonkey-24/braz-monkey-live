@@ -44,7 +44,7 @@ const archiveVideos = [
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow", "blackbook"];
 
-const GHOULISH_URL = "https://ghoulish.example.com"; // TODO: replace with the real link when provided
+const GHOULISH_URL = "https://ghoulishproductions.com/productos/alien-richer/";
 
 const SPRAY_COLORS = [
   "#f5e642", "#ffb400", "#ff5c4d", "#ff3e8a", "#b04dff", "#6a5cff",
