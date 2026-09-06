@@ -50,15 +50,60 @@ const SPRAY_COLORS = [
   "#9a9a92", "#5a5a52", "#ff9de2", "#ffffff",
 ];
 
+interface SprayLayer {
+  id: string;
+  name: string;
+  color: string;
+  visible: boolean;
+  canvas: HTMLCanvasElement;
+}
+
+function createLayer(name: string, color: string, width: number, height: number): SprayLayer {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  return { id: crypto.randomUUID(), name, color, visible: true, canvas };
+}
+
 function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; posting: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const last = useRef<{ x: number; y: number } | null>(null);
   const [color, setColor] = useState(SPRAY_COLORS[0]);
   const [radius, setRadius] = useState(18);
+  const [layers, setLayers] = useState<SprayLayer[]>([]);
+  const [activeLayerId, setActiveLayerId] = useState<string | null>(null);
+  const [redoStack, setRedoStack] = useState<HTMLCanvasElement[]>([]);
+
+  // Initialize with one layer
+  useEffect(() => {
+    if (layers.length === 0) {
+      const layer = createLayer("LAYER 01", color, 900, 560);
+      setLayers([layer]);
+      setActiveLayerId(layer.id);
+    }
+  }, [layers.length, color]);
+
+  const activeLayer = layers.find((l) => l.id === activeLayerId) ?? layers[0];
+
+  const redraw = () => {
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx || !canvasRef.current) return;
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    layers.forEach((layer) => {
+      if (layer.visible) {
+        ctx.drawImage(layer.canvas, 0, 0);
+      }
+    });
+  };
+
+  useEffect(() => {
+    redraw();
+  }, [layers, activeLayerId]);
 
   const spray = (x: number, y: number) => {
-    const ctx = canvasRef.current?.getContext("2d");
+    if (!activeLayer) return;
+    const ctx = activeLayer.canvas.getContext("2d");
     if (!ctx) return;
     for (let i = 0; i < 28; i++) {
       const angle = Math.random() * Math.PI * 2;
@@ -66,13 +111,14 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
       const dx = Math.cos(angle) * r;
       const dy = Math.sin(angle) * r;
       const alpha = 0.16 * (1 - r / radius) + 0.05;
-      ctx.fillStyle = color;
+      ctx.fillStyle = activeLayer.color;
       ctx.globalAlpha = alpha;
       ctx.beginPath();
       ctx.arc(x + dx, y + dy, Math.random() * 2.2 + 0.6, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
+    redraw();
   };
 
   const pos = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -108,8 +154,10 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
   };
   const up = () => { drawing.current = false; last.current = null; };
   const clear = () => {
-    const ctx = canvasRef.current?.getContext("2d");
-    if (ctx && canvasRef.current) ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    if (!activeLayer) return;
+    const ctx = activeLayer.canvas.getContext("2d");
+    if (ctx) ctx.clearRect(0, 0, activeLayer.canvas.width, activeLayer.canvas.height);
+    redraw();
   };
   const post = () => {
     const canvas = canvasRef.current;
@@ -123,23 +171,108 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
     octx.fillRect(0, 0, out.width, out.height);
     octx.drawImage(canvas, 0, 0);
     onPost(out.toDataURL("image/png"));
+    // Reset to a single fresh layer
+    const fresh = createLayer("LAYER 01", color, 900, 560);
+    setLayers([fresh]);
+    setActiveLayerId(fresh.id);
+    setRedoStack([]);
+  };
+
+  const addLayer = () => {
+    const layer = createLayer(`LAYER ${String(layers.length + 1).padStart(2, "0")}`, color, 900, 560);
+    setLayers((prev) => [...prev, layer]);
+    setActiveLayerId(layer.id);
+  };
+
+  const removeLayer = (id: string) => {
+    if (layers.length <= 1) return;
+    setLayers((prev) => {
+      const next = prev.filter((l) => l.id !== id);
+      if (activeLayerId === id) setActiveLayerId(next[0]?.id ?? null);
+      return next;
+    });
+  };
+
+  const moveLayer = (id: string, dir: -1 | 1) => {
+    setLayers((prev) => {
+      const idx = prev.findIndex((l) => l.id === id);
+      if (idx < 0) return prev;
+      const next = [...prev];
+      const [item] = next.splice(idx, 1);
+      next.splice(idx + dir, 0, item);
+      return next;
+    });
+  };
+
+  const toggleLayer = (id: string) => {
+    setLayers((prev) => prev.map((l) => (l.id === id ? { ...l, visible: !l.visible } : l)));
+  };
+
+  const undo = () => {
+    // Simple undo: clear the active layer
+    if (!activeLayer) return;
+    const snapshot = document.createElement("canvas");
+    snapshot.width = activeLayer.canvas.width;
+    snapshot.height = activeLayer.canvas.height;
+    snapshot.getContext("2d")?.drawImage(activeLayer.canvas, 0, 0);
+    setRedoStack((prev) => [...prev, snapshot]);
     clear();
+  };
+
+  const redo = () => {
+    const snapshot = redoStack[redoStack.length - 1];
+    if (!snapshot || !activeLayer) return;
+    const ctx = activeLayer.canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, activeLayer.canvas.width, activeLayer.canvas.height);
+    ctx.drawImage(snapshot, 0, 0);
+    setRedoStack((prev) => prev.slice(0, -1));
+    redraw();
   };
 
   return (
     <div className="spray-book">
       <div className="spray-tools">
         {SPRAY_COLORS.map((c) => (
-          <button key={c} type="button" className={`spray-color ${c === color ? "active" : ""}`} style={{ background: c }} onClick={() => setColor(c)} aria-label={`Spray color ${c}`} />
+          <button key={c} type="button" className={`spray-color ${c === activeLayer?.color ? "active" : ""}`} style={{ background: c }} onClick={() => {
+            setColor(c);
+            if (activeLayer) {
+              setLayers((prev) => prev.map((l) => (l.id === activeLayer.id ? { ...l, color: c } : l)));
+            }
+          }} aria-label={`Spray color ${c}`} />
         ))}
         <label className="spray-custom" title="Pick any color">
-          <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="Custom spray color" />
+          <input type="color" value={activeLayer?.color ?? color} onChange={(e) => {
+            setColor(e.target.value);
+            if (activeLayer) {
+              setLayers((prev) => prev.map((l) => (l.id === activeLayer.id ? { ...l, color: e.target.value } : l)));
+            }
+          }} aria-label="Custom spray color" />
           <span>ANY</span>
         </label>
         <label className="spray-size">NOZZLE
           <input type="range" min={8} max={44} value={radius} onChange={(e) => setRadius(Number(e.target.value))} />
         </label>
+        <button type="button" className="spray-action" onClick={undo} disabled={!activeLayer}>UNDO</button>
+        <button type="button" className="spray-action" onClick={redo} disabled={redoStack.length === 0}>REDO</button>
         <button type="button" className="spray-clear" onClick={clear}>CLEAR</button>
+      </div>
+      <div className="spray-layers" aria-label="Spray layers">
+        {layers.map((layer, idx) => (
+          <div key={layer.id} className={`spray-layer ${layer.id === activeLayerId ? "active" : ""}`}>
+            <button type="button" className="spray-layer-select" onClick={() => setActiveLayerId(layer.id)} aria-label={`Select ${layer.name}`}>
+              <span className="spray-layer-swatch" style={{ background: layer.color }} />
+              <span>{layer.name}</span>
+            </button>
+            <div className="spray-layer-actions">
+              <button type="button" onClick={() => toggleLayer(layer.id)} aria-label={`${layer.visible ? "Hide" : "Show"} ${layer.name}`}>{layer.visible ? "👁" : "◌"}</button>
+              <button type="button" onClick={() => moveLayer(layer.id, -1)} disabled={idx === 0} aria-label="Move layer up">↑</button>
+              <button type="button" onClick={() => moveLayer(layer.id, 1)} disabled={idx === layers.length - 1} aria-label="Move layer down">↓</button>
+              <button type="button" onClick={() => removeLayer(layer.id)} disabled={layers.length <= 1} aria-label={`Delete ${layer.name}`}>×</button>
+            </div>
+          </div>
+        ))}
+        <button type="button" className="spray-layer-add" onClick={addLayer}>+ ADD LAYER</button>
       </div>
       <canvas
         ref={canvasRef}

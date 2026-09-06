@@ -216,3 +216,8 @@
 
 - [x] Expand the spray-can color picker to a full palette with a custom color input.
 - [x] Verify and publish the color palette update.
+
+# Braz Monkey Spray Layers
+
+- [x] Build the multi-layer spray sketchbook with per-layer colors, visibility, merge, and reorder controls.
+- [x] Verify and publish the layers update.
