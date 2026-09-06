@@ -158,6 +158,13 @@
 
 - [ ] Build a desktop map with the full project, assets, and a startup command.
 
+# Braz Monkey Interactive Blackbook
+
+- [x] Add BLACKBOOK to the navigation bar.
+- [x] Build a spray-can drawing canvas with touch support.
+- [x] Post drawings to the gallery and add full-size viewer.
+- [x] Verify and publish the interactive Blackbook.
+
 # Braz Monkey Follow Silhouette Update
 
 - [x] Apply the new silhouette artwork to the Follow the Journey section.

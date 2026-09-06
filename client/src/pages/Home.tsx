@@ -34,7 +34,127 @@ const transmissions = [
 
 const heroBackground = "/manus-storage/canonface_30853db0.jpeg";
 
-const navItems = ["signal", "transmissions", "origin", "archive", "follow"];
+const navItems = ["signal", "transmissions", "origin", "archive", "follow", "blackbook"];
+
+const SPRAY_COLORS = ["#f5e642", "#ff3e8a", "#ff5c4d", "#f0eee4", "#7ec8ff"];
+
+function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; posting: boolean }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawing = useRef(false);
+  const last = useRef<{ x: number; y: number } | null>(null);
+  const [color, setColor] = useState(SPRAY_COLORS[0]);
+  const [radius, setRadius] = useState(18);
+
+  const spray = (x: number, y: number) => {
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return;
+    for (let i = 0; i < 28; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.random() * radius;
+      const dx = Math.cos(angle) * r;
+      const dy = Math.sin(angle) * r;
+      const alpha = 0.16 * (1 - r / radius) + 0.05;
+      ctx.fillStyle = color;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(x + dx, y + dy, Math.random() * 2.2 + 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  const pos = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current!;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: ((e.clientX - rect.left) / rect.width) * canvas.width,
+      y: ((e.clientY - rect.top) / rect.height) * canvas.height,
+    };
+  };
+
+  const down = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    e.preventDefault();
+    canvasRef.current?.setPointerCapture(e.pointerId);
+    drawing.current = true;
+    const p = pos(e);
+    last.current = p;
+    spray(p.x, p.y);
+  };
+  const move = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!drawing.current) return;
+    e.preventDefault();
+    const p = pos(e);
+    const prev = last.current;
+    if (prev) {
+      const dist = Math.hypot(p.x - prev.x, p.y - prev.y);
+      const steps = Math.max(1, Math.floor(dist / 4));
+      for (let i = 1; i <= steps; i++) {
+        spray(prev.x + ((p.x - prev.x) * i) / steps, prev.y + ((p.y - prev.y) * i) / steps);
+      }
+    }
+    last.current = p;
+  };
+  const up = () => { drawing.current = false; last.current = null; };
+  const clear = () => {
+    const ctx = canvasRef.current?.getContext("2d");
+    if (ctx && canvasRef.current) ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  };
+  const post = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const out = document.createElement("canvas");
+    out.width = canvas.width;
+    out.height = canvas.height;
+    const octx = out.getContext("2d");
+    if (!octx) return;
+    octx.fillStyle = "#0c0d0c";
+    octx.fillRect(0, 0, out.width, out.height);
+    octx.drawImage(canvas, 0, 0);
+    onPost(out.toDataURL("image/png"));
+    clear();
+  };
+
+  return (
+    <div className="spray-book">
+      <div className="spray-tools">
+        {SPRAY_COLORS.map((c) => (
+          <button key={c} type="button" className={`spray-color ${c === color ? "active" : ""}`} style={{ background: c }} onClick={() => setColor(c)} aria-label={`Spray color ${c}`} />
+        ))}
+        <label className="spray-size">NOZZLE
+          <input type="range" min={8} max={44} value={radius} onChange={(e) => setRadius(Number(e.target.value))} />
+        </label>
+        <button type="button" className="spray-clear" onClick={clear}>CLEAR</button>
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={900}
+        height={560}
+        className="spray-canvas"
+        onPointerDown={down}
+        onPointerMove={move}
+        onPointerUp={up}
+        onPointerCancel={up}
+        onPointerLeave={up}
+      />
+      <button type="button" className="button button-primary spray-post" onClick={post} disabled={posting}>{posting ? "POSTING..." : "POST TO BLACKBOOK"} <span>↗</span></button>
+    </div>
+  );
+}
+
+function BlackbookLightbox({ url, tag, onClose }: { url: string; tag: string; onClose: () => void }) {
+  useEffect(() => {
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [onClose]);
+  return (
+    <div className="blackbook-lightbox" onClick={onClose} role="dialog" aria-label={`Graffiti by ${tag}`}>
+      <img src={url} alt={`Graffiti by ${tag}`} onClick={(e) => e.stopPropagation()} />
+      <p>{tag}</p>
+      <button type="button" className="blackbook-lightbox-close" onClick={onClose} aria-label="Close">×</button>
+    </div>
+  );
+}
 
 function CursorFollower() {
   const cursorRef = useRef<HTMLImageElement>(null);
@@ -133,8 +253,11 @@ export default function Home() {
   const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [lightbox, setLightbox] = useState<{ url: string; tag: string } | null>(null);
 
-  const blackbookList = trpc.blackbook.list.useQuery(undefined, { enabled: blackbookOpen });
+  const utils = trpc.useUtils();
+
+  const blackbookList = trpc.blackbook.list.useQuery(undefined);
   const uploadMutation = trpc.blackbook.upload.useMutation({
     onSuccess: () => {
       setUploadStatus("success");
@@ -154,6 +277,23 @@ export default function Home() {
     },
     onError: () => setUploadStatus("error"),
   });
+
+  const sprayMutation = trpc.blackbook.upload.useMutation({
+    onSuccess: () => {
+      utils.blackbook.list.invalidate();
+    },
+  });
+
+  const postSpray = (dataUrl: string) => {
+    const base64 = dataUrl.split(",")[1];
+    sprayMutation.mutate({
+      tagName: tagName.trim() || "SPRAY TAG",
+      caption: caption.trim() || "Drawn in the blackbook",
+      fileName: `spray-tag-${Date.now()}.png`,
+      fileData: base64,
+      mimeType: "image/png",
+    });
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -295,19 +435,22 @@ export default function Home() {
             </div>
           )}
 
-          {blackbookOpen && blackbookList.data && blackbookList.data.length > 0 && (
+          {blackbookList.data && blackbookList.data.length > 0 && (
             <div className="blackbook-gallery">
               {blackbookList.data.map((entry) => (
-                <div key={entry.id} className="blackbook-entry">
+                <button key={entry.id} type="button" className="blackbook-entry" onClick={() => entry.fileUrl && setLightbox({ url: entry.fileUrl, tag: entry.tagName })}>
                   {entry.fileUrl && <img src={entry.fileUrl} alt={entry.tagName} className="blackbook-thumb" />}
                   <p className="blackbook-entry-tag">{entry.tagName}</p>
                   {entry.caption && <p className="blackbook-entry-caption">{entry.caption}</p>}
-                </div>
+                </button>
               ))}
             </div>
           )}
+          <SprayCanvas onPost={postSpray} posting={sprayMutation.isPending} />
         </section>
       </main>
+
+      {lightbox && <BlackbookLightbox url={lightbox.url} tag={lightbox.tag} onClose={() => setLightbox(null)} />}
 
       <footer className="site-footer"><div className="footer-brand"><img src="/manus-storage/braz-monkey-banner_8e9fcbe1.png" alt="BRAZ MONKEY" /><span>BRAZ MONKEY</span></div><p>Still figuring out this planet. Follow along.</p><span>© 2026 BRAZ MONKEY UNIVERSE</span></footer>
     </div>
