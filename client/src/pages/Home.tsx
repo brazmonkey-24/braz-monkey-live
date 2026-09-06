@@ -201,6 +201,9 @@ export default function Home() {
         <section id="archive" className="section archive-section">
           <div className="section-heading"><div><p className="eyebrow">// SIGNAL ARCHIVE</p><h2>THE<br /><em>ARCHIVE</em></h2></div><p className="section-note">A record of everything Braz<br />has intercepted so far.</p></div>
           <div className="archive-panel"><div className="archive-ring archive-photo" style={{ backgroundImage: "url('/manus-storage/PHOTO-2026-05-30-16-36-06_4e30a110.jpg')" }}><span>TRANSMISSION<br />ARCHIVE</span></div><div><p className="archive-code">ARCHIVE STATUS: RECEIVING</p><h3>THE SIGNAL<br /><em>NEVER STOPS.</em></h3><p>Browse the transmissions as they land. Visual fragments, late-night observations, and clues from the long way home.</p></div><button className="button button-ghost" onClick={() => jump("transmissions")}>BROWSE SIGNALS <span>→</span></button></div>
+          <div className="archive-video">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/FHYPykOT35Q?si=DJOq3b0BzxS8LJbJ" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+          </div>
         </section>
 
         <section id="follow" className="section follow-section">

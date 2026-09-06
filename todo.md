@@ -108,6 +108,11 @@
 - [x] Replace the background slideshow with the canonface image.
 - [x] Verify and publish the canonface background update.
 
+# Braz Monkey Archive YouTube Update
+
+- [x] Embed the provided YouTube video in the archive section.
+- [x] Verify and publish the archive update.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.
