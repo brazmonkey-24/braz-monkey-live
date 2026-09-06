@@ -1,5 +1,6 @@
 // Signal Zine direction: this page behaves like a living broadcast sheet—left-aligned, textured, direct, and built around three weekly transmissions.
 import { useEffect, useRef, useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 const transmissions = [
   {
@@ -125,6 +126,35 @@ export default function Home() {
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [blackbookOpen, setBlackbookOpen] = useState(false);
+  const [tagName, setTagName] = useState("");
+  const [caption, setCaption] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const blackbookList = trpc.blackbook.list.useQuery(undefined, { enabled: blackbookOpen });
+  const uploadMutation = trpc.blackbook.upload.useMutation({
+    onSuccess: () => {
+      setUploadStatus("success");
+      setSelectedFile(null);
+      setTagName("");
+      setCaption("");
+      blackbookList.refetch();
+    },
+    onError: () => setUploadStatus("error"),
+  });
+  const tagMutation = trpc.blackbook.tag.useMutation({
+    onSuccess: () => {
+      setUploadStatus("success");
+      setTagName("");
+      setCaption("");
+      blackbookList.refetch();
+    },
+    onError: () => setUploadStatus("error"),
+  });
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((entry) => entry.isIntersecting && setActive(entry.target.id)),
@@ -223,12 +253,12 @@ export default function Home() {
           <div className="blackbook-panel">
             <div className="blackbook-copy"><p className="eyebrow">// BLACKBOOK</p><h3>LEAVE YOUR<br /><em>MARK.</em></h3><p>Leave your tag or upload your graffiti of Braz Monkey. This is a personal sketchbook for practice, color tests, and new concepts.</p></div>
             <div className="blackbook-actions">
-              <button className="button button-primary">LEAVE A TAG <span>↗</span></button>
-              <button className="button button-ghost">UPLOAD GRAFFITI <span>→</span></button>
-              <button className="button button-ghost disclaimer-toggle" type="button" aria-expanded="false">DISCLAIMER <span>?</span></button>
+              <button className="button button-primary" onClick={() => setBlackbookOpen(!blackbookOpen)}>LEAVE A TAG <span>↗</span></button>
+              <button className="button button-ghost" onClick={() => fileInputRef.current?.click()}>UPLOAD GRAFFITI <span>→</span></button>
+              <button className="button button-ghost disclaimer-toggle" type="button" onClick={() => setDisclaimerOpen(!disclaimerOpen)} aria-expanded={disclaimerOpen}>DISCLAIMER <span>?</span></button>
             </div>
           </div>
-          <div className="disclaimer-panel" aria-hidden="true">
+          <div className={`disclaimer-panel ${disclaimerOpen ? "is-open" : ""}`} aria-hidden={!disclaimerOpen}>
             <div className="disclaimer-content">
               <h4>Disclaimer</h4>
               <p><strong>1. Promotional and Informational Use Only</strong><br />All content, information, and materials provided on this website are for promotional and general informational purposes only. The information is not intended to be, and should not be taken as, professional, legal, financial, or medical advice. [1] (https://www.webador.com/blog/privacy-cookies-and-more-is-your-website-legally-compliant/), [2] (https://www.iubenda.com/en/blog/disclaimer-examples/), [3] (https://qodeinteractive.com/magazine/must-have-legal-pages-for-any-wordpress-website/)</p>
@@ -237,6 +267,45 @@ export default function Home() {
               <p><strong>4. External Links</strong><br />Through this website, you may be able to link to other websites which are not under my control. I have no control over the nature, content, and availability of those sites. The inclusion of any links does not necessarily imply a recommendation or endorse the views expressed within them.</p>
             </div>
           </div>
+
+          {blackbookOpen && (
+            <div className="blackbook-form">
+              <input type="text" placeholder="YOUR TAG NAME" value={tagName} onChange={(e) => setTagName(e.target.value)} className="blackbook-input" />
+              <textarea placeholder="CAPTION OR MESSAGE (OPTIONAL)" value={caption} onChange={(e) => setCaption(e.target.value)} className="blackbook-textarea" />
+              <input type="file" ref={fileInputRef} style={{ display: "none" }} accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+              {selectedFile && <p className="blackbook-file">{selectedFile.name}</p>}
+              <div className="blackbook-form-actions">
+                {selectedFile ? (
+                  <button className="button button-primary" onClick={async () => {
+                    if (!selectedFile || !tagName.trim()) return;
+                    setUploadStatus("uploading");
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      const base64 = (reader.result as string).split(",")[1];
+                      uploadMutation.mutate({ tagName, caption, fileName: selectedFile.name, fileData: base64, mimeType: selectedFile.type });
+                    };
+                    reader.readAsDataURL(selectedFile);
+                  }} disabled={uploadStatus === "uploading"}>{uploadStatus === "uploading" ? "UPLOADING..." : "UPLOAD GRAFFITI"}</button>
+                ) : (
+                  <button className="button button-primary" onClick={() => tagMutation.mutate({ tagName, caption })} disabled={!tagName.trim() || uploadStatus === "uploading"}>LEAVE A TAG</button>
+                )}
+              </div>
+              {uploadStatus === "success" && <p className="blackbook-status success">TAG / UPLOAD SAVED.</p>}
+              {uploadStatus === "error" && <p className="blackbook-status error">UPLOAD FAILED. TRY AGAIN.</p>}
+            </div>
+          )}
+
+          {blackbookOpen && blackbookList.data && blackbookList.data.length > 0 && (
+            <div className="blackbook-gallery">
+              {blackbookList.data.map((entry) => (
+                <div key={entry.id} className="blackbook-entry">
+                  {entry.fileUrl && <img src={entry.fileUrl} alt={entry.tagName} className="blackbook-thumb" />}
+                  <p className="blackbook-entry-tag">{entry.tagName}</p>
+                  {entry.caption && <p className="blackbook-entry-caption">{entry.caption}</p>}
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
 

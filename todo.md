@@ -148,6 +148,16 @@
 - [x] Apply the silhouette artwork with a black scratch vignette to the Follow the Journey section.
 - [x] Verify and publish the background update.
 
+# Braz Monkey Full-Stack File Storage Integration
+
+- [x] Upgrade the project to full-stack (web-db-user) to unlock S3 file storage, backend, and database.
+- [x] Wire the Blackbook upload feature to file storage.
+- [x] Verify uploads end-to-end and publish.
+
+# Braz Monkey Desktop Map
+
+- [ ] Build a desktop map with the full project, assets, and a startup command.
+
 # Braz Monkey Follow Silhouette Update
 
 - [x] Apply the new silhouette artwork to the Follow the Journey section.
