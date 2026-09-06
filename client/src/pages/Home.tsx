@@ -31,7 +31,7 @@ const transmissions = [
   },
 ];
 
-const heroBackground = "/manus-storage/canonface-blended_2567497b.png";
+const heroBackground = "/manus-storage/canonface_30853db0.jpeg";
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow"];
 

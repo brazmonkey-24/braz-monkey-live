@@ -130,6 +130,11 @@
 - [x] Shift the background image slightly to the right.
 - [x] Verify and publish the background blend update.
 
+# Braz Monkey Background Restoration
+
+- [x] Restore the original canonface background with its full image area.
+- [x] Verify and publish the background restoration.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.
