@@ -211,3 +211,8 @@
 
 - [x] Remove the LEAVE YOUR MARK heading from the Blackbook panel.
 - [x] Verify and publish the update.
+
+# Braz Monkey Spray Colors
+
+- [x] Expand the spray-can color picker to a full palette with a custom color input.
+- [x] Verify and publish the color palette update.

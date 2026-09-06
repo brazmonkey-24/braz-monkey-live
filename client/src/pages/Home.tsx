@@ -44,7 +44,11 @@ const archiveVideos = [
 
 const navItems = ["signal", "transmissions", "origin", "archive", "follow", "blackbook"];
 
-const SPRAY_COLORS = ["#f5e642", "#ff3e8a", "#ff5c4d", "#f0eee4", "#7ec8ff"];
+const SPRAY_COLORS = [
+  "#f5e642", "#ffb400", "#ff5c4d", "#ff3e8a", "#b04dff", "#6a5cff",
+  "#3e8cff", "#7ec8ff", "#2ee6c8", "#3ddc54", "#a3e635", "#f0eee4",
+  "#9a9a92", "#5a5a52", "#ff9de2", "#ffffff",
+];
 
 function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; posting: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -128,6 +132,10 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
         {SPRAY_COLORS.map((c) => (
           <button key={c} type="button" className={`spray-color ${c === color ? "active" : ""}`} style={{ background: c }} onClick={() => setColor(c)} aria-label={`Spray color ${c}`} />
         ))}
+        <label className="spray-custom" title="Pick any color">
+          <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="Custom spray color" />
+          <span>ANY</span>
+        </label>
         <label className="spray-size">NOZZLE
           <input type="range" min={8} max={44} value={radius} onChange={(e) => setRadius(Number(e.target.value))} />
         </label>

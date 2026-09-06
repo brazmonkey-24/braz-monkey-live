@@ -65,6 +65,11 @@ button:focus-visible,a:focus-visible { outline:2px solid var(--yellow); outline-
 .spray-tools { display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-bottom:16px; }
 .spray-color { width:26px; height:26px; border:2px solid transparent; border-radius:50%; cursor:pointer; transition:transform .15s ease, border-color .15s ease; }
 .spray-color.active { border-color:var(--paper); transform:scale(1.2); }
+.spray-custom { display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+.spray-custom input[type="color"] { width:26px; height:26px; padding:0; border:2px dashed rgba(240,238,228,.4); border-radius:50%; background:none; cursor:pointer; }
+.spray-custom input[type="color"]::-webkit-color-swatch-wrapper { padding:0; }
+.spray-custom input[type="color"]::-webkit-color-swatch { border:none; border-radius:50%; }
+.spray-custom span { color:var(--pink); font-size:8px; letter-spacing:.16em; }
 .spray-size { display:flex; align-items:center; gap:10px; color:var(--pink); font-size:9px; letter-spacing:.16em; }
 .spray-size input { accent-color:var(--yellow); }
 .spray-clear { margin-left:auto; padding:8px 14px; border:1px solid var(--line); background:transparent; color:var(--paper); font-size:9px; letter-spacing:.14em; }
