@@ -118,6 +118,11 @@
 - [x] Upload and apply the QR background image to the Follow the Journey section.
 - [x] Verify and publish the follow-section update.
 
+# Braz Monkey Background Scale Update
+
+- [x] Reduce the homepage background image scale by 50%.
+- [x] Verify and publish the background scale update.
+
 # Braz Monkey Slideshow Picture Review
 
 - [ ] Create numbered contact sheets showing every slideshow picture.
