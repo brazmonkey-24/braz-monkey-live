@@ -148,6 +148,11 @@
 - [x] Apply the silhouette artwork with a black scratch vignette to the Follow the Journey section.
 - [x] Verify and publish the background update.
 
+# Braz Monkey Follow Silhouette Update
+
+- [x] Apply the new silhouette artwork to the Follow the Journey section.
+- [x] Verify and publish the follow-section update.
+
 # Braz Monkey Cursor Size and Speed Update
 
 - [x] Make the cursor logo 20% larger on touch/click.
