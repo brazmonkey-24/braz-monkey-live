@@ -221,3 +221,8 @@
 
 - [x] Build the multi-layer spray sketchbook with per-layer colors, visibility, merge, and reorder controls.
 - [x] Verify and publish the layers update.
+
+# Braz Monkey Spray Controls
+
+- [x] Add cap size and can pressure controls to the spray sketchbook.
+- [x] Verify and publish the spray controls update.

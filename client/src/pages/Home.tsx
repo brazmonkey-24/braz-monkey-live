@@ -71,6 +71,8 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
   const last = useRef<{ x: number; y: number } | null>(null);
   const [color, setColor] = useState(SPRAY_COLORS[0]);
   const [radius, setRadius] = useState(18);
+  const [capSize, setCapSize] = useState(18);
+  const [pressure, setPressure] = useState(50);
   const [layers, setLayers] = useState<SprayLayer[]>([]);
   const [activeLayerId, setActiveLayerId] = useState<string | null>(null);
   const [redoStack, setRedoStack] = useState<HTMLCanvasElement[]>([]);
@@ -105,12 +107,13 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
     if (!activeLayer) return;
     const ctx = activeLayer.canvas.getContext("2d");
     if (!ctx) return;
-    for (let i = 0; i < 28; i++) {
+    const particleCount = Math.round(28 * (pressure / 50));
+    for (let i = 0; i < particleCount; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const r = Math.random() * radius;
+      const r = Math.random() * capSize;
       const dx = Math.cos(angle) * r;
       const dy = Math.sin(angle) * r;
-      const alpha = 0.16 * (1 - r / radius) + 0.05;
+      const alpha = 0.16 * (1 - r / capSize) + 0.05;
       ctx.fillStyle = activeLayer.color;
       ctx.globalAlpha = alpha;
       ctx.beginPath();
@@ -250,8 +253,11 @@ function SprayCanvas({ onPost, posting }: { onPost: (dataUrl: string) => void; p
           }} aria-label="Custom spray color" />
           <span>ANY</span>
         </label>
-        <label className="spray-size">NOZZLE
-          <input type="range" min={8} max={44} value={radius} onChange={(e) => setRadius(Number(e.target.value))} />
+        <label className="spray-size">CAP SIZE
+          <input type="range" min={8} max={44} value={capSize} onChange={(e) => setCapSize(Number(e.target.value))} />
+        </label>
+        <label className="spray-size">PRESSURE
+          <input type="range" min={10} max={100} value={pressure} onChange={(e) => setPressure(Number(e.target.value))} />
         </label>
         <button type="button" className="spray-action" onClick={undo} disabled={!activeLayer}>UNDO</button>
         <button type="button" className="spray-action" onClick={redo} disabled={redoStack.length === 0}>REDO</button>
