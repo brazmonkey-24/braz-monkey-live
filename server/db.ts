@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blackbookEntries, InsertBlackbookEntry } from "../drizzle/schema";
+import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -108,4 +108,22 @@ export async function getBlackbookEntries() {
     return [];
   }
   return db.select().from(blackbookEntries).orderBy(desc(blackbookEntries.createdAt)).limit(24);
+}
+
+export async function insertCmsContent(entry: InsertCmsContent) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cmsContent).values(entry);
+}
+
+export async function getLatestCmsContent(type: "quote" | "prediction" | "vinyl") {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db
+    .select()
+    .from(cmsContent)
+    .where(eq(cmsContent.type, type))
+    .orderBy(desc(cmsContent.createdAt))
+    .limit(1);
+  return rows[0];
 }

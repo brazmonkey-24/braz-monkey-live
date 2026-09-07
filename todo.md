@@ -233,3 +233,11 @@
 - [x] Build the advertising spot with a large logo and inverse cursor parallax.
 - [x] Wire the real link (ghoulishproductions.com/productos/alien-richer/) into the GHOULISH ad logo.
 - [x] Verify and publish the advertising spot.
+
+# Braz Monkey CMS
+
+- [x] Design the CMS content table and database helpers.
+- [x] Build the password-protected /admin login.
+- [x] Build the dashboard form for Quote, Prediction, and Vinyl.
+- [x] Wire the live site to read from the database.
+- [x] Verify end-to-end, publish, and report.

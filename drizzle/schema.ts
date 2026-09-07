@@ -48,3 +48,27 @@ export const blackbookEntries = mysqlTable("blackbook_entries", {
 
 export type BlackbookEntry = typeof blackbookEntries.$inferSelect;
 export type InsertBlackbookEntry = typeof blackbookEntries.$inferInsert;
+
+/**
+ * CMS content: the weekly Quote, Prediction, and Vinyl entries managed from /admin.
+ * The live site reads the latest rows directly so updates appear instantly.
+ */
+export const cmsContent = mysqlTable("cms_content", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Content type: quote, prediction, or vinyl. */
+  type: mysqlEnum("type", ["quote", "prediction", "vinyl"]).notNull(),
+  /** Main text: the quote line, the prediction, or the vinyl story. */
+  body: text("body").notNull(),
+  /** Vinyl title (vinyl only). */
+  title: varchar("title", { length: 256 }),
+  /** Vinyl artist (vinyl only). */
+  artist: varchar("artist", { length: 256 }),
+  /** Optional image (S3 storage URL). */
+  imageUrl: varchar("imageUrl", { length: 512 }),
+  /** S3 storage key for the image. */
+  imageKey: varchar("imageKey", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CmsContent = typeof cmsContent.$inferSelect;
+export type InsertCmsContent = typeof cmsContent.$inferInsert;

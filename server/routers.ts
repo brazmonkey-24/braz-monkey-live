@@ -4,7 +4,9 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { storagePut } from "./storage";
-import { insertBlackbookEntry, getBlackbookEntries } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent } from "./db";
+
+const ADMIN_PASSWORD = "braz2026";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -59,6 +61,59 @@ export const appRouter = router({
         await insertBlackbookEntry({
           tagName: input.tagName,
           caption: input.caption,
+        });
+        return { success: true };
+      }),
+  }),
+
+  admin: router({
+    login: publicProcedure
+      .input(z.object({ password: z.string() }))
+      .mutation(({ input }) => {
+        return { ok: input.password === ADMIN_PASSWORD };
+      }),
+  }),
+
+  content: router({
+    latest: publicProcedure.query(async () => {
+      const [quote, prediction, vinyl] = await Promise.all([
+        getLatestCmsContent("quote"),
+        getLatestCmsContent("prediction"),
+        getLatestCmsContent("vinyl"),
+      ]);
+      return { quote, prediction, vinyl };
+    }),
+    save: publicProcedure
+      .input(
+        z.object({
+          password: z.string(),
+          type: z.enum(["quote", "prediction", "vinyl"]),
+          body: z.string().min(1),
+          title: z.string().max(256).optional(),
+          artist: z.string().max(256).optional(),
+          imageFileName: z.string().max(256).optional(),
+          imageData: z.string().optional(),
+          imageMime: z.string().max(64).optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+        let imageUrl: string | undefined;
+        let imageKey: string | undefined;
+        if (input.imageData && input.imageFileName && input.imageMime) {
+          const buffer = Buffer.from(input.imageData, "base64");
+          const relKey = `cms/${Date.now()}-${input.imageFileName}`;
+          const stored = await storagePut(relKey, buffer, input.imageMime);
+          imageUrl = stored.url;
+          imageKey = stored.key;
+        }
+        await insertCmsContent({
+          type: input.type,
+          body: input.body,
+          title: input.title,
+          artist: input.artist,
+          imageUrl,
+          imageKey,
         });
         return { success: true };
       }),

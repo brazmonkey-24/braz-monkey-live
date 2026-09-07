@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 
-const transmissions = [
+const defaultTransmissions = [
   {
     day: "MONDAY",
     tag: "QUOTES & ALIEN JOKES",
@@ -426,6 +426,24 @@ function Hot97Player() {
 }
 
 export default function Home() {
+  const { data: cms } = trpc.content.latest.useQuery(undefined, { refetchInterval: 10000 });
+  const transmissions = defaultTransmissions.map((item) => {
+    if (item.day === "MONDAY" && cms?.quote) {
+      return { ...item, copy: cms.quote.body, image: cms.quote.imageUrl || item.image };
+    }
+    if (item.day === "WEDNESDAY" && cms?.prediction) {
+      return { ...item, copy: cms.prediction.body, image: cms.prediction.imageUrl || item.image };
+    }
+    if (item.day === "FRIDAY" && cms?.vinyl) {
+      const v = cms.vinyl;
+      return {
+        ...item,
+        copy: `${v.title ? v.title : ""}${v.artist ? ` — ${v.artist}` : ""}${v.body ? `\n${v.body}` : ""}`.trim(),
+        image: v.imageUrl || item.image,
+      };
+    }
+    return item;
+  });
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
 
