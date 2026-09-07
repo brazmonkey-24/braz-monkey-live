@@ -246,5 +246,5 @@
 
 - [x] Add CMS list, edit, and delete procedures.
 - [x] Wire the admin management list for edit/delete.
-- [ ] Build the background slideshow from all uploaded pictures.
-- [ ] Verify end-to-end, publish, and report.
+- [x] Build the background slideshow from all uploaded pictures.
+- [x] Verify end-to-end, publish, and report.

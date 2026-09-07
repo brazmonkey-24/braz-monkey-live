@@ -46,6 +46,31 @@ const navItems = ["signal", "transmissions", "origin", "archive", "follow", "bla
 
 const GHOULISH_URL = "https://ghoulishproductions.com/productos/alien-richer/";
 
+const defaultSlideshowImages = [
+  "/manus-storage/canonface_30853db0.jpeg",
+  "/manus-storage/moondaymondaymorningquote_a499a598.jpg",
+  "/manus-storage/UseAIImageJul3,2026,17_42_46_938911e9.jpeg",
+  "/manus-storage/braz_monkey_no_text_338dba87.webp",
+  "/manus-storage/PHOTO-2026-05-30-16-36-06_4e30a110.jpg",
+];
+
+function BackgroundSlideshow({ extraImages }: { extraImages: string[] }) {
+  const [index, setIndex] = useState(0);
+  const images = [...defaultSlideshowImages, ...extraImages].filter(Boolean);
+  useEffect(() => {
+    if (images.length < 2) return;
+    const timer = window.setInterval(() => setIndex((i) => (i + 1) % images.length), 6000);
+    return () => window.clearInterval(timer);
+  }, [images.length]);
+  return (
+    <div className="bg-slideshow" aria-hidden>
+      {images.map((src, i) => (
+        <img key={src} src={src} alt="" className={i === index ? "active" : ""} />
+      ))}
+    </div>
+  );
+}
+
 const SPRAY_COLORS = [
   "#f5e642", "#ffb400", "#ff5c4d", "#ff3e8a", "#b04dff", "#6a5cff",
   "#3e8cff", "#7ec8ff", "#2ee6c8", "#3ddc54", "#a3e635", "#f0eee4",
@@ -427,6 +452,8 @@ function Hot97Player() {
 
 export default function Home() {
   const { data: cms } = trpc.content.latest.useQuery(undefined, { refetchInterval: 10000 });
+  const { data: blackbookImages } = trpc.blackbook.list.useQuery(undefined, { refetchInterval: 30000 });
+  const slideshowExtra = (blackbookImages ?? []).map((e) => e.fileUrl).filter(Boolean) as string[];
   const transmissions = (defaultTransmissions ?? []).map((item) => {
     if (item.day === "MONDAY" && cms?.quote) {
       return { ...item, copy: cms.quote.body, image: cms.quote.imageUrl || item.image };
@@ -515,6 +542,7 @@ export default function Home() {
 
   return (
     <div className="site-shell">
+      <BackgroundSlideshow extraImages={slideshowExtra} />
       <CursorFollower />
       <Hot97Player />
       <div className="ticker" aria-label="Braz Monkey transmission ticker">
