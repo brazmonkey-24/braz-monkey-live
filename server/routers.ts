@@ -2,11 +2,35 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent } from "./db";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_MAX_AGE_MS,
+  createAdminSessionToken,
+  hasValidAdminSession,
+} from "./adminSession";
 
-const ADMIN_PASSWORD = "braz2026";
+const ADMIN_PASSWORD_SALT = "9f82df8585520f28b675c58b954655de";
+const ADMIN_PASSWORD_HASH = "eb370360a44947fa4ab2eef968840187982e54405409a183a5facfab9d21e133110d1e94cf814254d11457f0bf071305bb1bbd9eeb21864a4a96741ddf13f632";
+
+function isAdminPassword(value: string) {
+  const candidate = scryptSync(value, ADMIN_PASSWORD_SALT, 64);
+  const expected = Buffer.from(ADMIN_PASSWORD_HASH, "hex");
+  return candidate.length === expected.length && timingSafeEqual(candidate, expected);
+}
+
+async function requireAdminSession(req: Parameters<typeof hasValidAdminSession>[0]) {
+  if (!(await hasValidAdminSession(req))) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Admin session expired. Log opnieuw in.",
+    });
+  }
+}
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -69,9 +93,26 @@ export const appRouter = router({
   admin: router({
     login: publicProcedure
       .input(z.object({ password: z.string() }))
-      .mutation(({ input }) => {
-        return { ok: input.password === ADMIN_PASSWORD };
+      .mutation(async ({ input, ctx }) => {
+        if (!isAdminPassword(input.password)) return { ok: false };
+
+        const token = await createAdminSessionToken();
+        ctx.res.cookie(ADMIN_SESSION_COOKIE, token, {
+          ...getSessionCookieOptions(ctx.req),
+          maxAge: ADMIN_SESSION_MAX_AGE_MS,
+        });
+        return { ok: true };
       }),
+    session: publicProcedure.query(async ({ ctx }) => ({
+      ok: await hasValidAdminSession(ctx.req),
+    })),
+    logout: publicProcedure.mutation(({ ctx }) => {
+      ctx.res.clearCookie(ADMIN_SESSION_COOKIE, {
+        ...getSessionCookieOptions(ctx.req),
+        maxAge: -1,
+      });
+      return { ok: true };
+    }),
   }),
 
   content: router({
@@ -89,29 +130,27 @@ export const appRouter = router({
     update: publicProcedure
       .input(
         z.object({
-          password: z.string(),
           id: z.number(),
           body: z.string().min(1),
           title: z.string().max(256).optional(),
           artist: z.string().max(256).optional(),
         })
       )
-      .mutation(async ({ input }) => {
-        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+      .mutation(async ({ input, ctx }) => {
+        await requireAdminSession(ctx.req);
         await updateCmsContent(input.id, { body: input.body, title: input.title, artist: input.artist });
         return { success: true };
       }),
     delete: publicProcedure
-      .input(z.object({ password: z.string(), id: z.number() }))
-      .mutation(async ({ input }) => {
-        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await requireAdminSession(ctx.req);
         await deleteCmsContent(input.id);
         return { success: true };
       }),
     save: publicProcedure
       .input(
         z.object({
-          password: z.string(),
           type: z.enum(["quote", "prediction", "vinyl"]),
           body: z.string().min(1),
           title: z.string().max(256).optional(),
@@ -121,8 +160,8 @@ export const appRouter = router({
           imageMime: z.string().max(64).optional(),
         })
       )
-      .mutation(async ({ input }) => {
-        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+      .mutation(async ({ input, ctx }) => {
+        await requireAdminSession(ctx.req);
         let imageUrl: string | undefined;
         let imageKey: string | undefined;
         if (input.imageData && input.imageFileName && input.imageMime) {
