@@ -427,7 +427,7 @@ function Hot97Player() {
 
 export default function Home() {
   const { data: cms } = trpc.content.latest.useQuery(undefined, { refetchInterval: 10000 });
-  const transmissions = defaultTransmissions.map((item) => {
+  const transmissions = (defaultTransmissions ?? []).map((item) => {
     if (item.day === "MONDAY" && cms?.quote) {
       return { ...item, copy: cms.quote.body, image: cms.quote.imageUrl || item.image };
     }
