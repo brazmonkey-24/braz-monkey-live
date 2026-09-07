@@ -248,3 +248,8 @@
 - [x] Wire the admin management list for edit/delete.
 - [x] Build the background slideshow from all uploaded pictures.
 - [x] Verify end-to-end, publish, and report.
+
+# Braz Monkey Media Archive
+
+- [x] Build the /media archive page listing all stored pictures.
+- [x] Verify and publish the media archive.
