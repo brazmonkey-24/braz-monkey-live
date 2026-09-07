@@ -63,6 +63,13 @@ function AdminDashboard({ password }: { password: string }) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [status, setStatus] = useState("");
   const save = trpc.content.save.useMutation();
+  const list = trpc.content.list.useQuery(undefined, { refetchInterval: 15000 });
+  const updateMut = trpc.content.update.useMutation();
+  const deleteMut = trpc.content.delete.useMutation();
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editBody, setEditBody] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editArtist, setEditArtist] = useState("");
 
   const toBase64 = (file: File) =>
     new Promise<string>((resolve, reject) => {
@@ -144,6 +151,47 @@ function AdminDashboard({ password }: { password: string }) {
           </button>
           {status && <p className="admin-status">{status}</p>}
         </form>
+
+        <div className="admin-list">
+          <p className="admin-eyebrow">// BEHEER</p>
+          <h2>EERDERE POSTS</h2>
+          {(list.data ?? []).length === 0 && <p className="admin-empty">Nog geen posts.</p>}
+          {(list.data ?? []).map((item) => (
+            <div key={item.id} className="admin-item">
+              {editingId === item.id ? (
+                <div className="admin-edit">
+                  {item.type === "vinyl" && (
+                    <>
+                      <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)} placeholder="Titel" />
+                      <input value={editArtist} onChange={(e) => setEditArtist(e.target.value)} placeholder="Artiest" />
+                    </>
+                  )}
+                  <textarea value={editBody} onChange={(e) => setEditBody(e.target.value)} rows={4} />
+                  <div className="admin-item-actions">
+                    <button type="button" onClick={async () => {
+                      await updateMut.mutateAsync({ password, id: item.id, body: editBody, title: editTitle, artist: editArtist });
+                      setEditingId(null);
+                      list.refetch();
+                    }}>OPSLAAN</button>
+                    <button type="button" className="ghost" onClick={() => setEditingId(null)}>ANNULEREN</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="admin-item-meta">
+                    <span className={`admin-badge admin-badge-${item.type}`}>{item.type.toUpperCase()}</span>
+                    {item.title && <strong>{item.title}{item.artist ? ` — ${item.artist}` : ""}</strong>}
+                    <p>{item.body.slice(0, 120)}{item.body.length > 120 ? "…" : ""}</p>
+                  </div>
+                  <div className="admin-item-actions">
+                    <button type="button" onClick={() => { setEditingId(item.id); setEditBody(item.body); setEditTitle(item.title ?? ""); setEditArtist(item.artist ?? ""); }}>BEWERK</button>
+                    <button type="button" className="danger" onClick={async () => { await deleteMut.mutateAsync({ password, id: item.id }); list.refetch(); }}>VERWIJDER</button>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );

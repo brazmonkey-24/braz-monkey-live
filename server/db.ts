@@ -127,3 +127,21 @@ export async function getLatestCmsContent(type: "quote" | "prediction" | "vinyl"
     .limit(1);
   return rows[0];
 }
+
+export async function listCmsContent() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(cmsContent).orderBy(desc(cmsContent.createdAt)).limit(50);
+}
+
+export async function updateCmsContent(id: number, data: { body: string; title?: string; artist?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(cmsContent).set(data).where(eq(cmsContent.id, id));
+}
+
+export async function deleteCmsContent(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cmsContent).where(eq(cmsContent.id, id));
+}

@@ -241,3 +241,10 @@
 - [x] Build the dashboard form for Quote, Prediction, and Vinyl.
 - [x] Wire the live site to read from the database.
 - [x] Verify end-to-end, publish, and report.
+
+# Braz Monkey CMS Management & Slideshow
+
+- [x] Add CMS list, edit, and delete procedures.
+- [x] Wire the admin management list for edit/delete.
+- [ ] Build the background slideshow from all uploaded pictures.
+- [ ] Verify end-to-end, publish, and report.

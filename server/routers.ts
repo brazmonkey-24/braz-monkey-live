@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { storagePut } from "./storage";
-import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent } from "./db";
 
 const ADMIN_PASSWORD = "braz2026";
 
@@ -83,6 +83,31 @@ export const appRouter = router({
       ]);
       return { quote, prediction, vinyl };
     }),
+    list: publicProcedure.query(async () => {
+      return listCmsContent();
+    }),
+    update: publicProcedure
+      .input(
+        z.object({
+          password: z.string(),
+          id: z.number(),
+          body: z.string().min(1),
+          title: z.string().max(256).optional(),
+          artist: z.string().max(256).optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+        await updateCmsContent(input.id, { body: input.body, title: input.title, artist: input.artist });
+        return { success: true };
+      }),
+    delete: publicProcedure
+      .input(z.object({ password: z.string(), id: z.number() }))
+      .mutation(async ({ input }) => {
+        if (input.password !== ADMIN_PASSWORD) throw new Error("Unauthorized");
+        await deleteCmsContent(input.id);
+        return { success: true };
+      }),
     save: publicProcedure
       .input(
         z.object({

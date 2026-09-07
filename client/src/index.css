@@ -210,3 +210,28 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .admin-login button:disabled, .admin-form button:disabled { opacity:.5; cursor:default; }
 .admin-error { color:#ff5c4d; font-size:12px; margin:0; }
 .admin-status { color:#3ddc54; font-size:12px; margin:0; letter-spacing:.08em; }
+
+/* ── Admin management list ── */
+.admin-list { margin-top:32px; display:flex; flex-direction:column; gap:14px; }
+.admin-list h2 { font-size:18px; margin:0; letter-spacing:.06em; }
+.admin-empty { color:rgba(240,238,228,.4); font-size:12px; margin:0; }
+.admin-item { display:flex; flex-direction:column; gap:12px; padding:16px; border:1px solid rgba(240,238,228,.14); background:#0a0b0a; }
+.admin-item-meta { display:flex; flex-direction:column; gap:6px; }
+.admin-item-meta strong { font-size:13px; letter-spacing:.04em; }
+.admin-item-meta p { font-size:12px; color:rgba(240,238,228,.6); margin:0; line-height:1.5; }
+.admin-badge { display:inline-block; font-size:9px; letter-spacing:.18em; padding:4px 8px; width:max-content; }
+.admin-badge-quote { background:#f5e642; color:#090a09; }
+.admin-badge-prediction { background:#ff3e8a; color:#090a09; }
+.admin-badge-vinyl { background:#ff5c4d; color:#090a09; }
+.admin-item-actions { display:flex; gap:8px; }
+.admin-item-actions button { background:#f5e642; border:0; color:#090a09; font-size:10px; letter-spacing:.14em; padding:8px 14px; cursor:pointer; }
+.admin-item-actions button.ghost { background:none; border:1px solid rgba(240,238,228,.2); color:#f0eee4; }
+.admin-item-actions button.danger { background:#ff5c4d; }
+.admin-edit { display:flex; flex-direction:column; gap:10px; }
+.admin-edit input, .admin-edit textarea { background:#090a09; border:1px solid rgba(240,238,228,.2); color:#f0eee4; padding:10px 12px; font-size:13px; font-family:inherit; width:100%; }
+
+/* ── Background slideshow ── */
+.bg-slideshow { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.bg-slideshow img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.2s ease; }
+.bg-slideshow img.active { opacity:1; }
+.bg-slideshow::after { content:""; position:absolute; inset:0; background:rgba(9,10,9,.78); }
