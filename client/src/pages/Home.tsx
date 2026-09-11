@@ -46,6 +46,44 @@ const archiveVideos = [
 
 const navItems = ["signal", "transmissions", "telemetry", "origin", "archive", "follow", "blackbook"];
 
+const navMaps: Record<string, { label: string; target: string }[]> = {
+  signal: [
+    { label: "Overview", target: "signal" },
+    { label: "Latest transmission", target: "transmissions" },
+    { label: "Ask Braz", target: "telemetry" },
+  ],
+  transmissions: [
+    { label: "Monday / quotes", target: "transmissions" },
+    { label: "Wednesday / predictions", target: "transmissions" },
+    { label: "Friday / vinyl", target: "transmissions" },
+  ],
+  telemetry: [
+    { label: "Signal numbers", target: "telemetry" },
+    { label: "Content gravity", target: "telemetry" },
+    { label: "Field notes", target: "telemetry" },
+  ],
+  origin: [
+    { label: "Origin file", target: "origin" },
+    { label: "No manual / no map", target: "origin" },
+    { label: "Pick up the signal", target: "follow" },
+  ],
+  archive: [
+    { label: "Browse archive", target: "archive" },
+    { label: "Video transmissions", target: "archive" },
+    { label: "Weekly drops", target: "transmissions" },
+  ],
+  follow: [
+    { label: "Follow the journey", target: "follow" },
+    { label: "Instagram", target: "follow" },
+    { label: "YouTube / Facebook", target: "follow" },
+  ],
+  blackbook: [
+    { label: "Leave a tag", target: "blackbook" },
+    { label: "Upload graffiti", target: "blackbook" },
+    { label: "Spray canvas", target: "blackbook" },
+  ],
+};
+
 const GHOULISH_URL = "https://ghoulishproductions.com/productos/alien-richer/";
 
 const defaultSlideshowImages = [
@@ -475,6 +513,7 @@ export default function Home() {
   });
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openMap, setOpenMap] = useState<string | null>(null);
 
   const [blackbookOpen, setBlackbookOpen] = useState(false);
   const [tagName, setTagName] = useState("");
@@ -564,9 +603,18 @@ export default function Home() {
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
           {navItems.map((id, index) => (
-            <button key={id} className={active === id ? "active" : ""} onClick={() => jump(id)}>
-              <span>0{index + 1}</span>{id}
-            </button>
+            <div key={id} className={`nav-map ${openMap === id ? "is-open" : ""}`}>
+              <button className={active === id ? "active" : ""} onClick={() => { jump(id); setOpenMap(openMap === id ? null : id); }} aria-expanded={openMap === id} aria-haspopup="true">
+                <span>0{index + 1}</span>{id}<b>+</b>
+              </button>
+              <div className="nav-submap" role="menu" aria-label={`${id} sub map`}>
+                {navMaps[id].map((item) => (
+                  <button key={item.label} type="button" role="menuitem" onClick={() => { jump(item.target); setOpenMap(null); }}>
+                    <i>↳</i>{item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
         <div className="header-status"><span className="live-dot" /> SIGNAL: LIVE</div>
