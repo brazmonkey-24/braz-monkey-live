@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { SignalAnalytics } from "@/components/SignalAnalytics";
 import { BrazMonkeyChat } from "@/components/BrazMonkeyChat";
+import { BrazMonkeySignalPopup } from "@/components/BrazMonkeySignalPopup";
 
 const defaultTransmissions = [
   {
@@ -586,6 +587,7 @@ export default function Home() {
       <BackgroundSlideshow extraImages={slideshowExtra} />
       <CursorFollower />
       <Hot97Player />
+      <BrazMonkeySignalPopup />
       <div className="ticker" aria-label="Braz Monkey transmission ticker">
         <div className="ticker-track">
           {Array.from({ length: 2 }).flatMap((_, repeat) =>
