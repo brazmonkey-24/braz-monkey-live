@@ -6,6 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
+import { invokeLLM } from "./_core/llm";
 import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
@@ -180,6 +181,33 @@ export const appRouter = router({
           imageKey,
         });
         return { success: true };
+      }),
+  }),
+
+  ai: router({
+    chat: publicProcedure
+      .input(z.object({
+        messages: z.array(z.object({
+          role: z.enum(["user", "assistant"]),
+          content: z.string().min(1).max(500),
+        })).min(1).max(20),
+      }))
+      .mutation(async ({ input }) => {
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: "system",
+              content: "You are Braz Monkey's visitor agent for braz-monkey.com. Speak in concise, dry, curious Signal Zine voice. Explain that Braz Monkey is an alien weekly transmission: Monday quotes and alien jokes, Wednesday bets and lotto predictions presented as entertainment only, Friday vinyl and old-school stories, plus the Blackbook graffiti sketchbook and archive. Help visitors navigate the site. Never claim to know private analytics, guarantee gambling outcomes, or provide professional advice. If asked something unrelated, answer briefly and steer back to the site. Use plain text or light markdown. Keep replies under 90 words.",
+            },
+            ...input.messages,
+          ],
+          max_tokens: 220,
+        });
+        const raw = response.choices[0]?.message?.content;
+        const content = Array.isArray(raw)
+          ? raw.filter((part): part is { type: "text"; text: string } => part.type === "text").map((part) => part.text).join("\n")
+          : raw;
+        return { content: content || "The signal arrived empty. Try again." };
       }),
   }),
 });
