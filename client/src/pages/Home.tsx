@@ -493,7 +493,12 @@ function Hot97Player() {
 
 export default function Home() {
   const { data: cms } = trpc.content.latest.useQuery(undefined, { refetchInterval: 10000 });
+  const { data: cmsNavigation } = trpc.navigation.list.useQuery(undefined, { refetchInterval: 15000 });
   const { data: blackbookImages } = trpc.blackbook.list.useQuery(undefined, { refetchInterval: 30000 });
+  const cmsNavMaps = (cmsNavigation ?? []).reduce<Record<string, { label: string; target: string }[]>>((groups, item) => {
+    (groups[item.section] ??= []).push({ label: item.label, target: item.path });
+    return groups;
+  }, {});
   const slideshowExtra = (blackbookImages ?? []).map((e) => e.fileUrl).filter(Boolean) as string[];
   const transmissions = (defaultTransmissions ?? []).map((item) => {
     if (item.day === "MONDAY" && cms?.quote) {
@@ -610,7 +615,7 @@ export default function Home() {
                 <span>0{index + 1}</span>{id}<b>+</b>
               </button>
               <div className="nav-submap" role="menu" aria-label={`${id} sub map`}>
-                {navMaps[id].map((item) => (
+                {(cmsNavMaps[id]?.length ? cmsNavMaps[id] : navMaps[id]).map((item) => (
                     <button key={item.label} type="button" role="menuitem" onClick={() => { window.location.href = item.target; setOpenMap(null); }}>
                     <i>↳</i>{item.label}
                   </button>

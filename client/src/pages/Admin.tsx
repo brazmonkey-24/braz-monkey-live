@@ -268,7 +268,63 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
             </div>
           ))}
         </div>
+
+        <NavigationManager />
       </div>
     </main>
   );
+}
+
+function NavigationManager() {
+  const [section, setSection] = useState("signal");
+  const [label, setLabel] = useState("");
+  const [path, setPath] = useState("/");
+  const [sortOrder, setSortOrder] = useState(0);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [status, setStatus] = useState("");
+  const list = trpc.navigation.list.useQuery(undefined, { refetchInterval: 15000 });
+  const save = trpc.navigation.save.useMutation();
+  const update = trpc.navigation.update.useMutation();
+  const remove = trpc.navigation.delete.useMutation();
+
+  const reset = () => {
+    setEditingId(null);
+    setSection("signal");
+    setLabel("");
+    setPath("/");
+    setSortOrder(0);
+  };
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setStatus("Navigatie opslaan...");
+    try {
+      if (editingId === null) {
+        await save.mutateAsync({ section, label, path, sortOrder });
+      } else {
+        await update.mutateAsync({ id: editingId, section, label, path, sortOrder });
+      }
+      await list.refetch();
+      reset();
+      setStatus("Navigatie opgeslagen. De live submaps zijn bijgewerkt.");
+    } catch (error) {
+      setStatus(`Navigatie mislukt: ${errorMessage(error, "onbekende fout")}`);
+    }
+  };
+
+  return <section className="admin-navigation-manager">
+    <div className="admin-list-heading"><div><p className="admin-eyebrow">// PAGE MAPS</p><h2>SUBMAP NAVIGATIE</h2></div><span className="admin-badge admin-badge-vinyl">CMS LIVE</span></div>
+    <form className="admin-form admin-navigation-form" onSubmit={submit}>
+      <label>Hoofdsectie<select value={section} onChange={(event) => setSection(event.target.value)}>{["signal", "transmissions", "telemetry", "origin", "archive", "follow", "blackbook"].map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <label>Submap label<input value={label} onChange={(event) => setLabel(event.target.value)} placeholder="Bijv. Weekly drops" required /></label>
+      <label>Pagina route<input value={path} onChange={(event) => setPath(event.target.value)} placeholder="/transmissions" required /></label>
+      <label>Volgorde<input type="number" min={0} max={999} value={sortOrder} onChange={(event) => setSortOrder(Number(event.target.value))} /></label>
+      <div className="admin-item-actions"><button type="submit" disabled={save.isPending || update.isPending}>{editingId === null ? "SUBMAP TOEVOEGEN" : "SUBMAP OPSLAAN"}</button>{editingId !== null && <button type="button" className="ghost" onClick={reset}>ANNULEREN</button>}</div>
+      {status && <p className="admin-status">{status}</p>}
+    </form>
+    <div className="admin-navigation-list">{(list.data ?? []).map((item) => <div className="admin-navigation-row" key={item.id}>
+      <div><span className="admin-badge admin-badge-quote">{item.section.toUpperCase()}</span><strong>{item.label}</strong><small>{item.path} · #{item.sortOrder}</small></div>
+      <div className="admin-item-actions"><button type="button" onClick={() => { setEditingId(item.id); setSection(item.section); setLabel(item.label); setPath(item.path); setSortOrder(item.sortOrder); }}>BEWERK</button><button type="button" className="danger" onClick={async () => { if (!window.confirm(`Verwijder submap: ${item.section} — ${item.label}?`)) return; await remove.mutateAsync({ id: item.id }); await list.refetch(); }}>VERWIJDER</button></div>
+    </div>)}</div>
+  </section>;
 }

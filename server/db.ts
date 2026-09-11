@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent } from "../drizzle/schema";
+import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent, cmsNavigation, InsertCmsNavigation } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -144,4 +144,28 @@ export async function deleteCmsContent(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(cmsContent).where(eq(cmsContent.id, id));
+}
+
+export async function listCmsNavigation() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(cmsNavigation).orderBy(asc(cmsNavigation.section), asc(cmsNavigation.sortOrder), asc(cmsNavigation.id));
+}
+
+export async function insertCmsNavigation(entry: InsertCmsNavigation) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cmsNavigation).values(entry);
+}
+
+export async function updateCmsNavigation(id: number, data: { section: string; label: string; path: string; sortOrder: number }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(cmsNavigation).set(data).where(eq(cmsNavigation.id, id));
+}
+
+export async function deleteCmsNavigation(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cmsNavigation).where(eq(cmsNavigation.id, id));
 }

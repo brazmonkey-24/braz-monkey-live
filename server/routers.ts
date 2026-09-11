@@ -7,7 +7,7 @@ import { scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
-import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_MS,
@@ -182,6 +182,36 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+  }),
+
+  navigation: router({
+    list: publicProcedure.query(async () => listCmsNavigation()),
+    save: publicProcedure.input(z.object({
+      section: z.string().min(1).max(64),
+      label: z.string().min(1).max(128),
+      path: z.string().min(1).max(256),
+      sortOrder: z.number().int().min(0).max(999),
+    })).mutation(async ({ input, ctx }) => {
+      await requireAdminSession(ctx.req);
+      await insertCmsNavigation(input);
+      return { success: true };
+    }),
+    update: publicProcedure.input(z.object({
+      id: z.number(),
+      section: z.string().min(1).max(64),
+      label: z.string().min(1).max(128),
+      path: z.string().min(1).max(256),
+      sortOrder: z.number().int().min(0).max(999),
+    })).mutation(async ({ input, ctx }) => {
+      await requireAdminSession(ctx.req);
+      await updateCmsNavigation(input.id, input);
+      return { success: true };
+    }),
+    delete: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+      await requireAdminSession(ctx.req);
+      await deleteCmsNavigation(input.id);
+      return { success: true };
+    }),
   }),
 
   ai: router({

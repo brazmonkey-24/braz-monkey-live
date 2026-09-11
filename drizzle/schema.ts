@@ -72,3 +72,19 @@ export const cmsContent = mysqlTable("cms_content", {
 
 export type CmsContent = typeof cmsContent.$inferSelect;
 export type InsertCmsContent = typeof cmsContent.$inferInsert;
+
+/**
+ * CMS-managed page navigation maps: each primary section can expose ordered sub-links.
+ */
+export const cmsNavigation = mysqlTable("cms_navigation", {
+  id: int("id").autoincrement().primaryKey(),
+  section: varchar("section", { length: 64 }).notNull(),
+  label: varchar("label", { length: 128 }).notNull(),
+  path: varchar("path", { length: 256 }).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CmsNavigation = typeof cmsNavigation.$inferSelect;
+export type InsertCmsNavigation = typeof cmsNavigation.$inferInsert;
