@@ -49,39 +49,39 @@ const navItems = ["signal", "transmissions", "telemetry", "origin", "archive", "
 
 const navMaps: Record<string, { label: string; target: string }[]> = {
   signal: [
-    { label: "Overview", target: "signal" },
-    { label: "Latest transmission", target: "transmissions" },
-    { label: "Ask Braz", target: "telemetry" },
+    { label: "Overview", target: "/" },
+    { label: "Latest transmission", target: "/transmissions" },
+    { label: "Ask Braz", target: "/telemetry" },
   ],
   transmissions: [
-    { label: "Monday / quotes", target: "transmissions" },
-    { label: "Wednesday / predictions", target: "transmissions" },
-    { label: "Friday / vinyl", target: "transmissions" },
+    { label: "Monday / quotes", target: "/transmissions" },
+    { label: "Wednesday / predictions", target: "/transmissions" },
+    { label: "Friday / vinyl", target: "/transmissions" },
   ],
   telemetry: [
-    { label: "Signal numbers", target: "telemetry" },
-    { label: "Content gravity", target: "telemetry" },
-    { label: "Field notes", target: "telemetry" },
+    { label: "Signal numbers", target: "/telemetry" },
+    { label: "Content gravity", target: "/telemetry" },
+    { label: "Field notes", target: "/telemetry" },
   ],
   origin: [
-    { label: "Origin file", target: "origin" },
-    { label: "No manual / no map", target: "origin" },
-    { label: "Pick up the signal", target: "follow" },
+    { label: "Origin file", target: "/origin" },
+    { label: "No manual / no map", target: "/origin" },
+    { label: "Pick up the signal", target: "/follow" },
   ],
   archive: [
-    { label: "Browse archive", target: "archive" },
-    { label: "Video transmissions", target: "archive" },
-    { label: "Weekly drops", target: "transmissions" },
+    { label: "Browse archive", target: "/archive" },
+    { label: "Video transmissions", target: "/archive" },
+    { label: "Weekly drops", target: "/transmissions" },
   ],
   follow: [
-    { label: "Follow the journey", target: "follow" },
-    { label: "Instagram", target: "follow" },
-    { label: "YouTube / Facebook", target: "follow" },
+    { label: "Follow the journey", target: "/follow" },
+    { label: "Instagram", target: "/follow" },
+    { label: "YouTube / Facebook", target: "/follow" },
   ],
   blackbook: [
-    { label: "Leave a tag", target: "blackbook" },
-    { label: "Upload graffiti", target: "blackbook" },
-    { label: "Spray canvas", target: "blackbook" },
+    { label: "Leave a tag", target: "/blackbook" },
+    { label: "Upload graffiti", target: "/blackbook" },
+    { label: "Spray canvas", target: "/blackbook" },
   ],
 };
 
@@ -611,7 +611,7 @@ export default function Home() {
               </button>
               <div className="nav-submap" role="menu" aria-label={`${id} sub map`}>
                 {navMaps[id].map((item) => (
-                  <button key={item.label} type="button" role="menuitem" onClick={() => { jump(item.target); setOpenMap(null); }}>
+                    <button key={item.label} type="button" role="menuitem" onClick={() => { window.location.href = item.target; setOpenMap(null); }}>
                     <i>↳</i>{item.label}
                   </button>
                 ))}
