@@ -38,12 +38,10 @@ function CursorFollower() {
       cursorRef.current.style.opacity = "1";
       cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(${scale})`;
     };
-    const handleLeave = () => { if (cursorRef.current) cursorRef.current.style.opacity = "0"; };
     const handlePress = (event: PointerEvent) => { if (cursorRef.current) cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(1.2)`; };
     window.addEventListener("pointermove", handleMove, { passive: true });
-    document.documentElement.addEventListener("mouseleave", handleLeave);
     window.addEventListener("pointerdown", handlePress, { passive: true });
-    return () => { window.removeEventListener("pointermove", handleMove); document.documentElement.removeEventListener("mouseleave", handleLeave); window.removeEventListener("pointerdown", handlePress); };
+    return () => { window.removeEventListener("pointermove", handleMove); window.removeEventListener("pointerdown", handlePress); };
   }, []);
   return <img ref={cursorRef} className="cursor-follower" src="/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png" alt="" aria-hidden="true" />;
 }

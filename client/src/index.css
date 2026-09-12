@@ -5,11 +5,11 @@
 :root { font-family: 'IBM Plex Mono', monospace; color: #f0eee4; background: #090a09; font-synthesis: none; --yellow:#f5e642; --pink:#ff3e8a; --red:#ff5c4d; --paper:#f0eee4; --ink:#090a09; --line:rgba(240,238,228,.22); }
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; background:#090a09; }
-body { margin:0; min-width:320px; background:#090a09; color:var(--paper); }
-button,a { font:inherit; color:inherit; cursor:url('/manus-storage/braz-monkey-cursor-64_5932a6b8.png') 6 6, pointer; }
+body { margin:0; min-width:320px; background:#090a09; color:var(--paper); cursor:url('/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png') 6 6, pointer; }
+button,a { font:inherit; color:inherit; cursor:url('/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png') 6 6, pointer; }
 button { border:0; }
 button:focus-visible,a:focus-visible { outline:2px solid var(--yellow); outline-offset:5px; }
-.site-shell { overflow:hidden; background:radial-gradient(circle at 75% 10%, rgba(245,230,66,.06), transparent 28%), #090a09; }.cursor-follower { position:fixed; z-index:100; top:0; left:0; width:64px; height:64px; pointer-events:none; opacity:0; object-fit:contain; transform:translate3d(-100px,-100px,0) scale(.82); transform-origin:8px 8px; transition:opacity .2s ease, transform .16s cubic-bezier(.23,1,.32,1); will-change:transform; }
+.site-shell { overflow:hidden; background:radial-gradient(circle at 75% 10%, rgba(245,230,66,.06), transparent 28%), #090a09; }.cursor-follower { position:fixed; z-index:100; top:0; left:0; width:64px; height:64px; pointer-events:none; opacity:1; object-fit:contain; transform:translate3d(-100px,-100px,0) scale(.82); transform-origin:8px 8px; transition:transform .16s cubic-bezier(.23,1,.32,1); will-change:transform; }
 .ticker { position:relative; z-index:20; height:31px; overflow:hidden; border-bottom:1px solid var(--line); background:var(--yellow); color:var(--ink); font-size:10px; font-weight:600; letter-spacing:.16em; white-space:nowrap; }
 .ticker-track { display:flex; width:max-content; animation:ticker 32s linear infinite; }
 .ticker span { display:flex; align-items:center; gap:20px; padding:8px 20px; }

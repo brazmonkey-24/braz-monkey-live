@@ -423,18 +423,15 @@ function CursorFollower() {
       cursorRef.current.style.opacity = "1";
       cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(${scale})`;
     };
-    const handleLeave = () => { if (cursorRef.current) cursorRef.current.style.opacity = "0"; };
     const handlePress = (event: PointerEvent) => {
       if (!cursorRef.current) return;
       cursorRef.current.style.opacity = "1";
       cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(1.2)`;
     };
     window.addEventListener("pointermove", handleMove, { passive: true });
-    document.documentElement.addEventListener("mouseleave", handleLeave);
     window.addEventListener("pointerdown", handlePress, { passive: true });
     return () => {
       window.removeEventListener("pointermove", handleMove);
-      document.documentElement.removeEventListener("mouseleave", handleLeave);
       window.removeEventListener("pointerdown", handlePress);
     };
   }, []);
@@ -443,7 +440,7 @@ function CursorFollower() {
 }
 
 function Hot97Player() {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -483,8 +480,8 @@ function Hot97Player() {
         <span>HOT 97 LIVE</span>
       </button>
       <div className="hot97-panel">
-        <button className="hot97-play" onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button>
-        <p>{playing ? "Streaming live from New York." : "Tap play to start the HOT 97 live stream."}</p>
+        <button className="hot97-play" onClick={togglePlayback} aria-pressed={playing}>{playing ? "STOP FM" : "START FM"}</button>
+        <p>{playing ? "FM is live. Press STOP FM to end the stream." : "Press START FM to hear HOT 97 live from New York."}</p>
         <a href="https://www.hot97.com/listen-live/" target="_blank" rel="noopener noreferrer">OPEN OFFICIAL PLAYER ↗</a>
       </div>
     </aside>
