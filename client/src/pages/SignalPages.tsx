@@ -95,6 +95,10 @@ export function ArchivePage() {
 export function FollowPage() {
   return <SiteFrame eyebrow="PICK UP THE SIGNAL" title={<>FOLLOW THE<br /><em>JOURNEY</em></>} intro="Three transmissions a week. Every week. Follow along so you do not miss a signal.">
     <div className="follow-page-hero"><img src={media[4].src} alt="Braz Monkey signal fragment" /><div><Radio size={24} /><h2>THE SIGNAL<br /><em>NEVER STOPS.</em></h2><p>Find Braz Monkey across the places where old-school stories, alien observations, and visual noise gather.</p><div className="page-social-links"><a href="https://www.facebook.com/BRAZM0NKEY/" target="_blank" rel="noreferrer">FACEBOOK <ExternalLink size={14} /></a><a href="https://www.youtube.com/@13VIERENTWINTIG" target="_blank" rel="noreferrer">YOUTUBE <ExternalLink size={14} /></a><a href="https://www.instagram.com/brazm0nkey/" target="_blank" rel="noreferrer">INSTAGRAM <ExternalLink size={14} /></a></div></div></div>
+    <section className="embedsocial-wall" aria-labelledby="embedsocial-wall-title">
+      <div className="embedsocial-wall-heading"><div><p className="eyebrow">// LIVE SOCIAL SIGNAL</p><h2 id="embedsocial-wall-title">BRAZ <em>IN THE WILD.</em></h2></div><a href="https://embedsocial.com/" target="_blank" rel="noreferrer">POWERED BY EMBEDSOCIAL <ExternalLink size={13} /></a></div>
+      <div className="embedsocial-frame-wrap"><iframe title="Braz Monkey live social feed" src="https://embedsocial.com/api/pro_hashtag/3f9e18dd47f95d168eb6ef695dff1d7bc5da03e7/" loading="eager" /></div>
+    </section>
   </SiteFrame>;
 }
 
