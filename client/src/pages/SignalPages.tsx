@@ -29,10 +29,11 @@ function CursorFollower() {
       if (event.pointerType !== "mouse" || !cursorRef.current) return;
       const target = event.target as HTMLElement;
       const interactive = Boolean(target.closest("a, button"));
+      const closeTarget = Boolean(target.closest(".bm-signal-popup-close"));
       const lastX = Number(cursorRef.current.dataset.x || event.clientX);
       const lastY = Number(cursorRef.current.dataset.y || event.clientY);
       const distance = Math.hypot(event.clientX - lastX, event.clientY - lastY);
-      const scale = interactive ? 1.75 : Math.min(1.65, 0.82 + distance / 70);
+      const scale = closeTarget ? 2.8 : interactive ? 1.75 : Math.min(1.65, 0.82 + distance / 70);
       cursorRef.current.dataset.x = String(event.clientX);
       cursorRef.current.dataset.y = String(event.clientY);
       cursorRef.current.style.opacity = "1";
