@@ -269,6 +269,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
           ))}
         </div>
 
+        <TransmissionMediaManager />
         <NavigationManager />
       </div>
     </main>
@@ -326,5 +327,56 @@ function NavigationManager() {
       <div><span className="admin-badge admin-badge-quote">{item.section.toUpperCase()}</span><strong>{item.label}</strong><small>{item.path} · #{item.sortOrder}</small></div>
       <div className="admin-item-actions"><button type="button" onClick={() => { setEditingId(item.id); setSection(item.section); setLabel(item.label); setPath(item.path); setSortOrder(item.sortOrder); }}>BEWERK</button><button type="button" className="danger" onClick={async () => { if (!window.confirm(`Verwijder submap: ${item.section} — ${item.label}?`)) return; await remove.mutateAsync({ id: item.id }); await list.refetch(); }}>VERWIJDER</button></div>
     </div>)}</div>
+  </section>;
+}
+
+
+function TransmissionMediaManager() {
+  const [slot, setSlot] = useState<"monday" | "wednesday" | "friday">("monday");
+  const [title, setTitle] = useState("");
+  const [caption, setCaption] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [status, setStatus] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+  const list = trpc.transmissionMedia.list.useQuery(undefined, { refetchInterval: 15000 });
+  const save = trpc.transmissionMedia.save.useMutation();
+  const remove = trpc.transmissionMedia.delete.useMutation();
+
+  const toBase64 = (input: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
+    reader.onerror = reject;
+    reader.readAsDataURL(input);
+  });
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!file) return setStatus("Kies eerst een beeld of video.");
+    setStatus("Footage uploaden en synchroniseren...");
+    try {
+      const mediaType = file.type.startsWith("video/") ? "video" : "image";
+      await save.mutateAsync({ slot, mediaType, title: title || undefined, caption: caption || undefined, fileName: file.name, fileData: await toBase64(file), mimeType: file.type });
+      await list.refetch();
+      setTitle(""); setCaption(""); setFile(null); if (fileRef.current) fileRef.current.value = "";
+      setStatus("Opgeslagen. De nieuwste media staat nu live in de juiste weekkaart.");
+    } catch (error) {
+      setStatus(`Upload mislukt: ${errorMessage(error, "onbekende fout")}`);
+    }
+  };
+
+  const slotLabel = (value: string) => value === "monday" ? "MONDAY / MORNING QUOTES" : value === "wednesday" ? "WEDNESDAY / PREDICTIONS" : "FRIDAY / VINYL DROP";
+
+  return <section className="admin-media-manager">
+    <div className="admin-list-heading"><div><p className="admin-eyebrow">// WEEKLY MEDIA MAPS</p><h2>SYNCED TRANSMISSIONS</h2></div><span className="admin-badge admin-badge-vinyl">AUTO-LIVE</span></div>
+    <p className="admin-media-help">Drop an image or footage into a weekly map. The newest upload automatically replaces the visual on that transmission card; older uploads stay in the archive list below.</p>
+    <form className="admin-form admin-media-form" onSubmit={submit}>
+      <label>Map<select value={slot} onChange={(event) => setSlot(event.target.value as typeof slot)}><option value="monday">MONDAY / MORNING QUOTES</option><option value="wednesday">WEDNESDAY / PREDICTIONS</option><option value="friday">FRIDAY / VINYL DROP</option></select></label>
+      <label>Title (optional)<input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Transmission title" /></label>
+      <label>Caption (optional)<textarea value={caption} onChange={(event) => setCaption(event.target.value)} rows={3} placeholder="Short note for the live card" /></label>
+      <label>Image or footage<input ref={fileRef} type="file" accept="image/*,video/*" onChange={(event) => setFile(event.target.files?.[0] ?? null)} required /></label>
+      <button type="submit" disabled={save.isPending}>{save.isPending ? "SYNCING..." : "UPLOAD & SYNC MAP"}</button>
+      {status && <p className="admin-status">{status}</p>}
+    </form>
+    <div className="admin-media-list">{(list.data ?? []).map((item) => <div className="admin-media-row" key={item.id}><div><span className="admin-badge admin-badge-quote">{slotLabel(item.slot)}</span><strong>{item.title || item.fileName}</strong><small>{item.mediaType.toUpperCase()} · {new Date(item.createdAt).toLocaleString()}</small></div><button type="button" className="danger" onClick={async () => { if (!window.confirm(`Verwijder ${item.fileName} uit ${slotLabel(item.slot)}?`)) return; await remove.mutateAsync({ id: item.id }); await list.refetch(); }}>VERWIJDER</button></div>)}</div>
   </section>;
 }

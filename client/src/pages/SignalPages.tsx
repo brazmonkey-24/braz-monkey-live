@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { Activity, ArrowUpRight, BookOpen, ExternalLink, Image as ImageIcon, Radio, Sparkles } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 const media = [
   { src: "/manus-storage/canonface_30853db0.jpeg", label: "ORIGIN / FACE FILE", tone: "yellow" },
@@ -67,8 +68,13 @@ function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title
 }
 
 export function TransmissionsPage() {
+  const { data: syncedMedia } = trpc.transmissionMedia.list.useQuery(undefined, { refetchInterval: 15000 });
+  const slots = ["monday", "wednesday", "friday"] as const;
+  const syncedBySlot = (syncedMedia ?? []).reduce<Record<string, NonNullable<typeof syncedMedia>[number]>>((latest, item) => { if (!latest[item.slot]) latest[item.slot] = item; return latest; }, {});
+  const copy = ["Quotes, alien jokes, and a sharp thought to start the week.", "A playful look at bets and lotto picks. Entertainment only.", "Old-school records and the story behind the spin."];
+  const titles = ["MORNING TRANSMISSION", "GALAXY PREDICTIONS", "TGIF VINYL DROP"];
   return <SiteFrame eyebrow="WEEKLY TRANSMISSIONS" title={<>THE <em>CONTENT</em></>} intro="Three recurring signals from the alien weekly desk. Browse the drops, then tune into the archive for the older frequencies.">
-    <div className="page-card-grid transmission-page-grid">{media.slice(1, 4).map((item, i) => <article className={`page-media-card tone-${item.tone}`} key={item.src}><img src={item.src} alt={item.label} /><div><span>0{i + 1} / {item.label}</span><h2>{["MORNING TRANSMISSION", "GALAXY PREDICTIONS", "TGIF VINYL DROP"][i]}</h2><p>{["Quotes, alien jokes, and a sharp thought to start the week.", "A playful look at bets and lotto picks. Entertainment only.", "Old-school records and the story behind the spin."][i]}</p><a href="/archive">SEE SIGNAL ARCHIVE <ArrowUpRight size={14} /></a></div></article>)}</div>
+    <div className="page-card-grid transmission-page-grid">{media.slice(1, 4).map((item, i) => { const synced = syncedBySlot[slots[i]]; return <article className={`page-media-card tone-${item.tone}`} key={item.src}>{synced?.mediaType === "video" ? <video src={synced.fileUrl} poster={item.src} muted loop autoPlay playsInline controls aria-label={`${titles[i]} footage`} /> : <img src={synced?.fileUrl || item.src} alt={item.label} />}<div><span>0{i + 1} / {item.label}</span><h2>{synced?.title || titles[i]}</h2><p>{synced?.caption || copy[i]}</p><a href="/archive">SEE SIGNAL ARCHIVE <ArrowUpRight size={14} /></a></div></article>; })}</div>
   </SiteFrame>;
 }
 

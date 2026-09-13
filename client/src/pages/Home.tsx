@@ -492,28 +492,37 @@ function Hot97Player() {
 export default function Home() {
   const { data: cms } = trpc.content.latest.useQuery(undefined, { refetchInterval: 10000 });
   const { data: cmsNavigation } = trpc.navigation.list.useQuery(undefined, { refetchInterval: 15000 });
+  const { data: cmsTransmissionMedia } = trpc.transmissionMedia.list.useQuery(undefined, { refetchInterval: 15000 });
   const { data: blackbookImages } = trpc.blackbook.list.useQuery(undefined, { refetchInterval: 30000 });
   const cmsNavMaps = (cmsNavigation ?? []).reduce<Record<string, { label: string; target: string }[]>>((groups, item) => {
     (groups[item.section] ??= []).push({ label: item.label, target: item.path });
     return groups;
   }, {});
   const slideshowExtra = (blackbookImages ?? []).map((e) => e.fileUrl).filter(Boolean) as string[];
+  const mediaBySlot = (cmsTransmissionMedia ?? []).reduce<Record<string, NonNullable<typeof cmsTransmissionMedia>[number]>>((latest, item) => {
+    if (!latest[item.slot]) latest[item.slot] = item;
+    return latest;
+  }, {});
   const transmissions = (defaultTransmissions ?? []).map((item) => {
+    const slot = item.day === "MONDAY" ? "monday" : item.day === "WEDNESDAY" ? "wednesday" : "friday";
+    const weeklyMedia = mediaBySlot[slot];
+    const syncedMedia = weeklyMedia ? { mediaUrl: weeklyMedia.fileUrl, mediaType: weeklyMedia.mediaType, mediaTitle: weeklyMedia.title, mediaCaption: weeklyMedia.caption } : {};
     if (item.day === "MONDAY" && cms?.quote) {
-      return { ...item, copy: cms.quote.body, image: cms.quote.imageUrl || item.image };
+      return { ...item, ...syncedMedia, copy: cms.quote.body, image: cms.quote.imageUrl || item.image };
     }
     if (item.day === "WEDNESDAY" && cms?.prediction) {
-      return { ...item, copy: cms.prediction.body, image: cms.prediction.imageUrl || item.image };
+      return { ...item, ...syncedMedia, copy: cms.prediction.body, image: cms.prediction.imageUrl || item.image };
     }
     if (item.day === "FRIDAY" && cms?.vinyl) {
       const v = cms.vinyl;
       return {
         ...item,
+        ...syncedMedia,
         copy: `${v.title ? v.title : ""}${v.artist ? ` — ${v.artist}` : ""}${v.body ? `\n${v.body}` : ""}`.trim(),
         image: v.imageUrl || item.image,
       };
     }
-    return item;
+    return { ...item, ...syncedMedia };
   });
   const [active, setActive] = useState("signal");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -646,8 +655,8 @@ export default function Home() {
             {transmissions.map((item, index) => (
               <article className={`transmission-card tone-${item.tone}`} key={item.day}>
                 <div className="card-meta"><span>0{index + 1}</span><b>{item.day}</b><small>{item.cadence}</small><i className="card-signal-mark">◈</i></div>
-                <div className={`card-image card-image-${item.tone}`}><img src={item.image} alt={`${item.day} Braz Monkey transmission`} onError={(event) => { event.currentTarget.style.display = "none"; }} /><span className="image-fallback">IMAGE<br />SIGNAL<br />LOST</span></div>
-                <div className="card-content"><p className="eyebrow">{item.tag}</p><h3>{item.title}</h3><p>{item.copy}</p><button className="text-link" onClick={() => jump("archive")}>SEE EPISODES <span>→</span></button></div>
+                <div className={`card-image card-image-${item.tone}`}>{item.mediaType === "video" && item.mediaUrl ? <video src={item.mediaUrl} poster={item.image} muted loop autoPlay playsInline controls aria-label={`${item.day} Braz Monkey footage`} /> : <img src={item.mediaUrl || item.image} alt={`${item.day} Braz Monkey transmission`} onError={(event) => { event.currentTarget.style.display = "none"; }} />}<span className="image-fallback">IMAGE<br />SIGNAL<br />LOST</span></div>
+                <div className="card-content"><p className="eyebrow">{item.tag}</p><h3>{item.mediaTitle || item.title}</h3><p>{item.mediaCaption || item.copy}</p><button className="text-link" onClick={() => jump("archive")}>SEE EPISODES <span>→</span></button></div>
               </article>
             ))}
           </div>

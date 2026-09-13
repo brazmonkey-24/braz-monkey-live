@@ -7,7 +7,7 @@ import { scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
-import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_MS,
@@ -210,6 +210,40 @@ export const appRouter = router({
     delete: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
       await requireAdminSession(ctx.req);
       await deleteCmsNavigation(input.id);
+      return { success: true };
+    }),
+  }),
+
+  transmissionMedia: router({
+    list: publicProcedure.query(async () => listCmsTransmissionMedia()),
+    save: publicProcedure.input(z.object({
+      slot: z.enum(["monday", "wednesday", "friday"]),
+      mediaType: z.enum(["image", "video"]),
+      title: z.string().max(256).optional(),
+      caption: z.string().max(2000).optional(),
+      fileName: z.string().min(1).max(256),
+      fileData: z.string().min(1),
+      mimeType: z.string().min(1).max(128),
+    })).mutation(async ({ input, ctx }) => {
+      await requireAdminSession(ctx.req);
+      const buffer = Buffer.from(input.fileData, "base64");
+      const relKey = `transmissions/${input.slot}/${Date.now()}-${input.fileName}`;
+      const stored = await storagePut(relKey, buffer, input.mimeType);
+      await insertCmsTransmissionMedia({
+        slot: input.slot,
+        mediaType: input.mediaType,
+        title: input.title,
+        caption: input.caption,
+        fileUrl: stored.url,
+        fileKey: stored.key,
+        fileName: input.fileName,
+        mimeType: input.mimeType,
+      });
+      return { success: true, url: stored.url };
+    }),
+    delete: publicProcedure.input(z.object({ id: z.number() })).mutation(async ({ input, ctx }) => {
+      await requireAdminSession(ctx.req);
+      await deleteCmsTransmissionMedia(input.id);
       return { success: true };
     }),
   }),

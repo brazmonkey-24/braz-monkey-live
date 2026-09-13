@@ -88,3 +88,22 @@ export const cmsNavigation = mysqlTable("cms_navigation", {
 
 export type CmsNavigation = typeof cmsNavigation.$inferSelect;
 export type InsertCmsNavigation = typeof cmsNavigation.$inferInsert;
+
+/**
+ * Weekly transmission media maps. The latest item in each slot syncs to its live card.
+ */
+export const cmsTransmissionMedia = mysqlTable("cms_transmission_media", {
+  id: int("id").autoincrement().primaryKey(),
+  slot: mysqlEnum("slot", ["monday", "wednesday", "friday"]).notNull(),
+  mediaType: mysqlEnum("mediaType", ["image", "video"]).notNull(),
+  title: varchar("title", { length: 256 }),
+  caption: text("caption"),
+  fileUrl: varchar("fileUrl", { length: 512 }).notNull(),
+  fileKey: varchar("fileKey", { length: 512 }).notNull(),
+  fileName: varchar("fileName", { length: 256 }).notNull(),
+  mimeType: varchar("mimeType", { length: 128 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CmsTransmissionMedia = typeof cmsTransmissionMedia.$inferSelect;
+export type InsertCmsTransmissionMedia = typeof cmsTransmissionMedia.$inferInsert;

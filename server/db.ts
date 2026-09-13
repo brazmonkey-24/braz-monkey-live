@@ -1,6 +1,6 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent, cmsNavigation, InsertCmsNavigation } from "../drizzle/schema";
+import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent, cmsNavigation, InsertCmsNavigation, cmsTransmissionMedia, InsertCmsTransmissionMedia } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -168,4 +168,22 @@ export async function deleteCmsNavigation(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(cmsNavigation).where(eq(cmsNavigation.id, id));
+}
+
+export async function listCmsTransmissionMedia() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(cmsTransmissionMedia).orderBy(desc(cmsTransmissionMedia.createdAt)).limit(90);
+}
+
+export async function insertCmsTransmissionMedia(entry: InsertCmsTransmissionMedia) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cmsTransmissionMedia).values(entry);
+}
+
+export async function deleteCmsTransmissionMedia(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cmsTransmissionMedia).where(eq(cmsTransmissionMedia.id, id));
 }
