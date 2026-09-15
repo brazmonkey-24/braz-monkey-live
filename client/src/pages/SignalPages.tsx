@@ -23,34 +23,8 @@ const pageLinks = [
   ["ARCHIVE", "/archive"], ["FOLLOW", "/follow"], ["BLACKBOOK", "/blackbook"],
 ] as const;
 
-function CursorFollower() {
-  const cursorRef = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const handleMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse" || !cursorRef.current) return;
-      const target = event.target as HTMLElement;
-      const interactive = Boolean(target.closest("a, button"));
-      const closeTarget = Boolean(target.closest(".bm-signal-popup-close"));
-      const lastX = Number(cursorRef.current.dataset.x || event.clientX);
-      const lastY = Number(cursorRef.current.dataset.y || event.clientY);
-      const distance = Math.hypot(event.clientX - lastX, event.clientY - lastY);
-      const scale = closeTarget ? 2.8 : interactive ? 1.75 : Math.min(1.65, 0.82 + distance / 70);
-      cursorRef.current.dataset.x = String(event.clientX);
-      cursorRef.current.dataset.y = String(event.clientY);
-      cursorRef.current.style.opacity = "1";
-      cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(${scale})`;
-    };
-    const handlePress = (event: PointerEvent) => { if (cursorRef.current) cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(1.2)`; };
-    window.addEventListener("pointermove", handleMove, { passive: true });
-    window.addEventListener("pointerdown", handlePress, { passive: true });
-    return () => { window.removeEventListener("pointermove", handleMove); window.removeEventListener("pointerdown", handlePress); };
-  }, []);
-  return <img ref={cursorRef} className="cursor-follower" src="/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png" alt="" aria-hidden="true" />;
-}
-
 function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title: ReactNode; intro: string; children: ReactNode }) {
   return <div className="signal-page-shell">
-    <CursorFollower />
     <div className="ticker"><div className="ticker-track">{["EARTH IS STRANGE", "WE ARE ALL WEIRD", "NO PAST", "NO ENEMIES", "FINDING ROOTS", "OLD SCHOOL VIBES"].map((item, i) => <span key={`${item}-${i}`}><b>{item}</b><i>◈</i></span>)}</div></div>
     <header className="signal-page-header">
       <a className="signal-page-brand" href="/" aria-label="Back to Braz Monkey home"><img src="/manus-storage/braz-monkey-banner-alpha_0cbb9178.png" alt="Braz Monkey" /></a>

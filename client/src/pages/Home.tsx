@@ -405,41 +405,6 @@ function GhoulishAd() {
   );
 }
 
-function CursorFollower() {
-  const cursorRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const handleMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse" || !cursorRef.current) return;
-      const target = event.target as HTMLElement;
-      const interactive = Boolean(target.closest("a, button"));
-      const closeTarget = Boolean(target.closest(".bm-signal-popup-close"));
-      const lastX = Number(cursorRef.current.dataset.x || event.clientX);
-      const lastY = Number(cursorRef.current.dataset.y || event.clientY);
-      const distance = Math.hypot(event.clientX - lastX, event.clientY - lastY);
-      const motionScale = Math.min(1.65, 0.82 + distance / 70);
-      const scale = closeTarget ? 2.8 : interactive ? 1.75 : motionScale;
-      cursorRef.current.dataset.x = String(event.clientX);
-      cursorRef.current.dataset.y = String(event.clientY);
-      cursorRef.current.style.opacity = "1";
-      cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(${scale})`;
-    };
-    const handlePress = (event: PointerEvent) => {
-      if (!cursorRef.current) return;
-      cursorRef.current.style.opacity = "1";
-      cursorRef.current.style.transform = `translate3d(${event.clientX - 8}px, ${event.clientY - 8}px, 0) scale(1.2)`;
-    };
-    window.addEventListener("pointermove", handleMove, { passive: true });
-    window.addEventListener("pointerdown", handlePress, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", handleMove);
-      window.removeEventListener("pointerdown", handlePress);
-    };
-  }, []);
-
-  return <img ref={cursorRef} className="cursor-follower" src="/manus-storage/braz-monkey-cursor-64-alpha_69db966a.png" alt="" aria-hidden="true" />;
-}
-
 function Hot97Player() {
   const [expanded, setExpanded] = useState(true);
   const [playing, setPlaying] = useState(false);
@@ -597,8 +562,6 @@ export default function Home() {
   return (
     <div className="site-shell">
       <BackgroundSlideshow extraImages={slideshowExtra} />
-      <CursorFollower />
-      <Hot97Player />
       <BrazMonkeySignalPopup />
       <div className="ticker" aria-label="Braz Monkey transmission ticker">
         <div className="ticker-track">

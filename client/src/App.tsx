@@ -3,16 +3,18 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Media from "./pages/Media";
 import { ArchivePage, BlackbookPage, FollowPage, OriginPage, TelemetryPage, TransmissionsPage } from "./pages/SignalPages";
+import CursorFollower from "./components/CursorFollower";
 
 export default function App() {
   const path = typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
-  if (path === "/admin") return <Admin />;
-  if (path === "/media") return <Media />;
-  if (path === "/transmissions") return <TransmissionsPage />;
-  if (path === "/telemetry") return <TelemetryPage />;
-  if (path === "/origin") return <OriginPage />;
-  if (path === "/archive") return <ArchivePage />;
-  if (path === "/follow") return <FollowPage />;
-  if (path === "/blackbook") return <BlackbookPage />;
-  return <Home />;
+  const page = path === "/admin" ? <Admin />
+    : path === "/media" ? <Media />
+    : path === "/transmissions" ? <TransmissionsPage />
+    : path === "/telemetry" ? <TelemetryPage />
+    : path === "/origin" ? <OriginPage />
+    : path === "/archive" ? <ArchivePage />
+    : path === "/follow" ? <FollowPage />
+    : path === "/blackbook" ? <BlackbookPage />
+    : <Home />;
+  return <><CursorFollower />{page}</>;
 }
