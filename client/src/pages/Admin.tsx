@@ -8,6 +8,7 @@ function errorMessage(error: unknown, fallback: string) {
 }
 
 export default function Admin() {
+  const [username, setUsername] = useState(() => typeof window !== "undefined" ? window.localStorage.getItem("braz-cms-username") ?? "" : "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const session = trpc.admin.session.useQuery(undefined, { retry: false });
@@ -19,11 +20,12 @@ export default function Admin() {
     setError("");
 
     try {
-      const result = await login.mutateAsync({ password });
+      const result = await login.mutateAsync({ username, password });
       if (!result.ok) {
         setError("Verkeerd wachtwoord.");
         return;
       }
+      window.localStorage.setItem("braz-cms-username", username);
       setPassword("");
       await session.refetch();
     } catch (loginError) {
@@ -49,11 +51,19 @@ export default function Admin() {
           <p className="admin-eyebrow">// BRAZ MONKEY CMS</p>
           <h1>ADMIN LOGIN</h1>
           <input
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            placeholder="Username"
+            autoComplete="username"
+            autoFocus
+          />
+          <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Wachtwoord"
-            autoFocus
+            autoComplete="current-password"
           />
           {error && <p className="admin-error">{error}</p>}
           <button type="submit" disabled={login.isPending}>

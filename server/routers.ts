@@ -7,6 +7,7 @@ import { scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
+import { ENV } from "./_core/env";
 import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
@@ -16,11 +17,11 @@ import {
 } from "./adminSession";
 
 const ADMIN_PASSWORD_SALT = "9f82df8585520f28b675c58b954655de";
-const ADMIN_PASSWORD_HASH = "eb370360a44947fa4ab2eef968840187982e54405409a183a5facfab9d21e133110d1e94cf814254d11457f0bf071305bb1bbd9eeb21864a4a96741ddf13f632";
 
 function isAdminPassword(value: string) {
+  if (!ENV.adminPassword) return false;
   const candidate = scryptSync(value, ADMIN_PASSWORD_SALT, 64);
-  const expected = Buffer.from(ADMIN_PASSWORD_HASH, "hex");
+  const expected = scryptSync(ENV.adminPassword, ADMIN_PASSWORD_SALT, 64);
   return candidate.length === expected.length && timingSafeEqual(candidate, expected);
 }
 
@@ -93,9 +94,10 @@ export const appRouter = router({
 
   admin: router({
     login: publicProcedure
-      .input(z.object({ password: z.string() }))
+      .input(z.object({ username: z.string().min(1).max(128), password: z.string().min(1) }))
       .mutation(async ({ input, ctx }) => {
-        if (!isAdminPassword(input.password)) return { ok: false };
+        const validUsername = Boolean(ENV.adminUsername) && input.username === ENV.adminUsername;
+        if (!validUsername || !isAdminPassword(input.password)) return { ok: false };
 
         const token = await createAdminSessionToken();
         ctx.res.cookie(ADMIN_SESSION_COOKIE, token, {
