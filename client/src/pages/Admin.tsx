@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 
 type CmsType = "quote" | "prediction" | "vinyl";
+type CmsWorkspace = "content" | "media" | "maps";
 
 function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -101,6 +102,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
   const updateMut = trpc.content.update.useMutation();
   const deleteMut = trpc.content.delete.useMutation();
   const utils = trpc.useUtils();
+  const [workspace, setWorkspace] = useState<CmsWorkspace>("content");
 
   const toBase64 = (file: File) =>
     new Promise<string>((resolve, reject) => {
@@ -174,14 +176,22 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
   return (
     <main className="admin-shell">
       <div className="admin-panel">
-        <p className="admin-eyebrow">// CMS DASHBOARD</p>
-        <div className="admin-item-actions">
-          <h1>NIEUWE CONTENT</h1>
-          <button type="button" className="ghost" onClick={onLogout}>
-            UITLOGGEN
-          </button>
+        <div className="cms-dashboard-head">
+          <div>
+            <p className="admin-eyebrow">// BRAZ MONKEY CMS / CONTROL CENTER</p>
+            <h1>RUN THE <em>SIGNAL.</em></h1>
+            <p className="cms-dashboard-lede">Choose a workspace. Publish weekly content, sync footage folders, or manage the live navigation map.</p>
+          </div>
+          <button type="button" className="ghost" onClick={onLogout}>UITLOGGEN</button>
         </div>
+        <nav className="cms-workspace-nav" aria-label="CMS workspaces">
+          <button type="button" className={workspace === "content" ? "active" : ""} onClick={() => setWorkspace("content")}><b>01</b><span>CONTENT DESK</span><small>Quotes, predictions, vinyl</small></button>
+          <button type="button" className={workspace === "media" ? "active" : ""} onClick={() => setWorkspace("media")}><b>02</b><span>MEDIA FOLDERS</span><small>Monday, Wednesday, Friday</small></button>
+          <button type="button" className={workspace === "maps" ? "active" : ""} onClick={() => setWorkspace("maps")}><b>03</b><span>PAGE MAPS</span><small>Navigation and submaps</small></button>
+        </nav>
 
+        {workspace === "content" && <section className="cms-workspace-panel">
+        <div className="cms-section-heading"><div><p className="admin-eyebrow">// CONTENT DESK</p><h2>WEEKLY POSTS</h2></div><span className="admin-badge admin-badge-quote">LIVE SYNC</span></div>
         <form onSubmit={handleSave} className="admin-form">
           <label>
             Type
@@ -278,9 +288,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
             </div>
           ))}
         </div>
+        </section>}
 
-        <TransmissionMediaManager />
-        <NavigationManager />
+        {workspace === "media" && <TransmissionMediaManager />}
+        {workspace === "maps" && <NavigationManager />}
       </div>
     </main>
   );
