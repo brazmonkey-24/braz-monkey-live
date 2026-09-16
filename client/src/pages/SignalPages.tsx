@@ -16,6 +16,7 @@ const videos = [
   ["Xt74oL9FWqA", "MILLENNIUMMIEK FT MAYLAY SPARKS"],
   ["HOMrw2qQOd8", "ENERGIERAMP ROBOTIX VOL 1"],
   ["PKpmTHKZ9pU", "RAYMZTER FT ROBOTIX"],
+  ["SYiFeoonNd8", "HE LIVES IN THE STATIC EVERYONE ELSE SKIPS"],
 ] as const;
 
 const pageLinks = [
