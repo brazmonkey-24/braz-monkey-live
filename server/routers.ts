@@ -3,12 +3,12 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
-import { scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
 import { ENV } from "./_core/env";
-import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia, getCmsAdminCredential, upsertCmsAdminCredential } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_MS,
@@ -23,6 +23,16 @@ function isAdminPassword(value: string) {
   const candidate = scryptSync(value, ADMIN_PASSWORD_SALT, 64);
   const expected = scryptSync(ENV.adminPassword, ADMIN_PASSWORD_SALT, 64);
   return candidate.length === expected.length && timingSafeEqual(candidate, expected);
+}
+
+function isHashMatch(value: string, hash: string, salt: string) {
+  const candidate = scryptSync(value, salt, 64);
+  const expected = Buffer.from(hash, "hex");
+  return candidate.length === expected.length && timingSafeEqual(candidate, expected);
+}
+
+export function createCmsPasswordHash(password: string, passwordSalt = randomBytes(24).toString("hex")) {
+  return { passwordHash: scryptSync(password, passwordSalt, 64).toString("hex"), passwordSalt };
 }
 
 async function requireAdminSession(req: Parameters<typeof hasValidAdminSession>[0]) {
@@ -97,7 +107,10 @@ export const appRouter = router({
       .input(z.object({ username: z.string().min(1).max(128), password: z.string().min(1) }))
       .mutation(async ({ input, ctx }) => {
         const validUsername = Boolean(ENV.adminUsername) && input.username === ENV.adminUsername;
-        if (!validUsername || !isAdminPassword(input.password)) return { ok: false };
+        if (!validUsername) return { ok: false };
+        const stored = await getCmsAdminCredential(input.username);
+        const validPassword = stored ? isHashMatch(input.password, stored.passwordHash, stored.passwordSalt) : isAdminPassword(input.password);
+        if (!validPassword) return { ok: false };
 
         const token = await createAdminSessionToken();
         ctx.res.cookie(ADMIN_SESSION_COOKIE, token, {
@@ -116,6 +129,18 @@ export const appRouter = router({
       });
       return { ok: true };
     }),
+    changePassword: publicProcedure
+      .input(z.object({ currentPassword: z.string().min(1), newPassword: z.string().min(12).max(256) }))
+      .mutation(async ({ input, ctx }) => {
+        await requireAdminSession(ctx.req);
+        if (!ENV.adminUsername) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Admin username is not configured" });
+        const stored = await getCmsAdminCredential(ENV.adminUsername);
+        const validCurrent = stored ? isHashMatch(input.currentPassword, stored.passwordHash, stored.passwordSalt) : isAdminPassword(input.currentPassword);
+        if (!validCurrent) throw new TRPCError({ code: "BAD_REQUEST", message: "Current password is incorrect" });
+        const { passwordHash, passwordSalt } = createCmsPasswordHash(input.newPassword);
+        await upsertCmsAdminCredential({ username: ENV.adminUsername, passwordHash, passwordSalt });
+        return { ok: true };
+      }),
   }),
 
   content: router({

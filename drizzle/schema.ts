@@ -107,3 +107,16 @@ export const cmsTransmissionMedia = mysqlTable("cms_transmission_media", {
 
 export type CmsTransmissionMedia = typeof cmsTransmissionMedia.$inferSelect;
 export type InsertCmsTransmissionMedia = typeof cmsTransmissionMedia.$inferInsert;
+
+/** Server-side CMS credentials. Passwords are stored as salted scrypt hashes. */
+export const cmsAdminCredentials = mysqlTable("cms_admin_credentials", {
+  id: int("id").autoincrement().primaryKey(),
+  username: varchar("username", { length: 320 }).notNull().unique(),
+  passwordHash: varchar("passwordHash", { length: 128 }).notNull(),
+  passwordSalt: varchar("passwordSalt", { length: 64 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CmsAdminCredential = typeof cmsAdminCredentials.$inferSelect;
+export type InsertCmsAdminCredential = typeof cmsAdminCredentials.$inferInsert;

@@ -413,3 +413,8 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .cms-section-heading h2 { margin:8px 0 0; color:var(--paper); font-family:'Bebas Neue',sans-serif; font-size:48px; font-weight:400; line-height:.9; }
 .cms-workspace-panel .admin-form { margin-top:0; }
 @media (max-width:700px) { .cms-dashboard-head { flex-direction:column; }.cms-workspace-nav { grid-template-columns:1fr; }.cms-workspace-nav button { min-height:86px; }.cms-workspace-nav span { margin-top:8px; }.cms-workspace-panel { padding:16px; }.cms-section-heading { flex-direction:column; } }
+
+
+.cms-account-copy { margin-bottom:24px; }
+.cms-password-form { max-width:620px; margin-top:0; }
+.cms-password-form button { margin-top:4px; }

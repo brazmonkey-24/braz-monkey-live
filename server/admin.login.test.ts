@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { appRouter } from "./routers";
+import { appRouter, createCmsPasswordHash } from "./routers";
+import { scryptSync, timingSafeEqual } from "node:crypto";
 import { ADMIN_SESSION_COOKIE } from "./adminSession";
 import type { TrpcContext } from "./_core/context";
 
@@ -28,6 +29,14 @@ function createContext(): { ctx: TrpcContext; cookies: CookieCall[] } {
 }
 
 describe("admin.login", () => {
+  it("creates a salted password hash that verifies with the stored salt", () => {
+    const { passwordHash, passwordSalt } = createCmsPasswordHash("new-secure-password", "test-salt");
+    const candidate = scryptSync("new-secure-password", passwordSalt, 64);
+    const expected = Buffer.from(passwordHash, "hex");
+    expect(candidate.length).toBe(expected.length);
+    expect(timingSafeEqual(candidate, expected)).toBe(true);
+  });
+
   it("accepts the configured CMS username and password and creates an admin session", async () => {
     const username = process.env.ADMIN_USERNAME;
     const password = process.env.ADMIN_PASSWORD;

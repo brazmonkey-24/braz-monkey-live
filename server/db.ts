@@ -1,6 +1,6 @@
 import { asc, desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent, cmsNavigation, InsertCmsNavigation, cmsTransmissionMedia, InsertCmsTransmissionMedia } from "../drizzle/schema";
+import { InsertUser, users, blackbookEntries, InsertBlackbookEntry, cmsContent, InsertCmsContent, cmsNavigation, InsertCmsNavigation, cmsTransmissionMedia, InsertCmsTransmissionMedia, cmsAdminCredentials, InsertCmsAdminCredential } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -186,4 +186,19 @@ export async function deleteCmsTransmissionMedia(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(cmsTransmissionMedia).where(eq(cmsTransmissionMedia.id, id));
+}
+
+export async function getCmsAdminCredential(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(cmsAdminCredentials).where(eq(cmsAdminCredentials.username, username)).limit(1);
+  return rows[0];
+}
+
+export async function upsertCmsAdminCredential(entry: InsertCmsAdminCredential) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(cmsAdminCredentials).values(entry).onDuplicateKeyUpdate({
+    set: { passwordHash: entry.passwordHash, passwordSalt: entry.passwordSalt, updatedAt: new Date() },
+  });
 }

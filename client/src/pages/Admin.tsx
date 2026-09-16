@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 
 type CmsType = "quote" | "prediction" | "vinyl";
-type CmsWorkspace = "content" | "media" | "maps";
+type CmsWorkspace = "content" | "media" | "maps" | "account";
 
 function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -103,6 +103,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
   const deleteMut = trpc.content.delete.useMutation();
   const utils = trpc.useUtils();
   const [workspace, setWorkspace] = useState<CmsWorkspace>("content");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStatus, setPasswordStatus] = useState("");
+  const changePassword = trpc.admin.changePassword.useMutation();
 
   const toBase64 = (file: File) =>
     new Promise<string>((resolve, reject) => {
@@ -188,6 +193,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
           <button type="button" className={workspace === "content" ? "active" : ""} onClick={() => setWorkspace("content")}><b>01</b><span>CONTENT DESK</span><small>Quotes, predictions, vinyl</small></button>
           <button type="button" className={workspace === "media" ? "active" : ""} onClick={() => setWorkspace("media")}><b>02</b><span>MEDIA FOLDERS</span><small>Monday, Wednesday, Friday</small></button>
           <button type="button" className={workspace === "maps" ? "active" : ""} onClick={() => setWorkspace("maps")}><b>03</b><span>PAGE MAPS</span><small>Navigation and submaps</small></button>
+          <button type="button" className={workspace === "account" ? "active" : ""} onClick={() => setWorkspace("account")}><b>04</b><span>ACCOUNT</span><small>Change CMS password</small></button>
         </nav>
 
         {workspace === "content" && <section className="cms-workspace-panel">
@@ -292,6 +298,33 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
 
         {workspace === "media" && <TransmissionMediaManager />}
         {workspace === "maps" && <NavigationManager />}
+        {workspace === "account" && <section className="cms-workspace-panel">
+          <div className="cms-section-heading"><div><p className="admin-eyebrow">// ACCOUNT SECURITY</p><h2>CHANGE PASSWORD</h2></div><span className="admin-badge admin-badge-vinyl">PRIVATE</span></div>
+          <p className="cms-dashboard-lede cms-account-copy">Update the CMS password without editing code or environment settings. Your username stays the same.</p>
+          <form className="admin-form cms-password-form" onSubmit={async (event) => {
+            event.preventDefault();
+            setPasswordStatus("");
+            if (newPassword !== confirmPassword) {
+              setPasswordStatus("New passwords do not match.");
+              return;
+            }
+            try {
+              await changePassword.mutateAsync({ currentPassword, newPassword });
+              setCurrentPassword("");
+              setNewPassword("");
+              setConfirmPassword("");
+              setPasswordStatus("Password changed. Use the new password next time you log in.");
+            } catch (passwordError) {
+              setPasswordStatus(errorMessage(passwordError, "Password change failed."));
+            }
+          }}>
+            <label>Current password<input type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} autoComplete="current-password" required /></label>
+            <label>New password<input type="password" value={newPassword} onChange={(event) => setNewPassword(event.target.value)} minLength={12} autoComplete="new-password" required /></label>
+            <label>Confirm new password<input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} minLength={12} autoComplete="new-password" required /></label>
+            <button type="submit" disabled={changePassword.isPending}>{changePassword.isPending ? "UPDATING..." : "CHANGE PASSWORD"}</button>
+            {passwordStatus && <p className="admin-status" role="status">{passwordStatus}</p>}
+          </form>
+        </section>}
       </div>
     </main>
   );
