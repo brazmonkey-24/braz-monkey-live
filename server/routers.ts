@@ -31,13 +31,6 @@ function isHashMatch(value: string, hash: string, salt: string) {
   return candidate.length === expected.length && timingSafeEqual(candidate, expected);
 }
 
-export function isAdminRecoveryToken(value: string) {
-  if (!ENV.adminRecoveryToken || !value) return false;
-  const candidate = Buffer.from(value);
-  const expected = Buffer.from(ENV.adminRecoveryToken);
-  return candidate.length === expected.length && timingSafeEqual(candidate, expected);
-}
-
 export function createCmsPasswordHash(password: string, passwordSalt = randomBytes(24).toString("hex")) {
   return { passwordHash: scryptSync(password, passwordSalt, 64).toString("hex"), passwordSalt };
 }
@@ -144,17 +137,6 @@ export const appRouter = router({
         const stored = await getCmsAdminCredential(ENV.adminUsername);
         const validCurrent = stored ? isHashMatch(input.currentPassword, stored.passwordHash, stored.passwordSalt) : isAdminPassword(input.currentPassword);
         if (!validCurrent) throw new TRPCError({ code: "BAD_REQUEST", message: "Current password is incorrect" });
-        const { passwordHash, passwordSalt } = createCmsPasswordHash(input.newPassword);
-        await upsertCmsAdminCredential({ username: ENV.adminUsername, passwordHash, passwordSalt });
-        return { ok: true };
-      }),
-    recoverPassword: publicProcedure
-      .input(z.object({ username: z.string().min(1).max(320), recoveryToken: z.string().min(1).max(512), newPassword: z.string().min(12).max(256) }))
-      .mutation(async ({ input }) => {
-        const validRequest = Boolean(ENV.adminUsername) && input.username === ENV.adminUsername && isAdminRecoveryToken(input.recoveryToken);
-        if (!validRequest) {
-          throw new TRPCError({ code: "BAD_REQUEST", message: "Recovery details are invalid." });
-        }
         const { passwordHash, passwordSalt } = createCmsPasswordHash(input.newPassword);
         await upsertCmsAdminCredential({ username: ENV.adminUsername, passwordHash, passwordSalt });
         return { ok: true };
