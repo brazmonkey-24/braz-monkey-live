@@ -418,3 +418,10 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .cms-account-copy { margin-bottom:24px; }
 .cms-password-form { max-width:620px; margin-top:0; }
 .cms-password-form button { margin-top:4px; }
+
+
+/* ── Admin password recovery ── */
+.admin-recovery { gap:14px; }
+.admin-recovery-copy { margin:0 0 4px; color:rgba(240,238,228,.55); font-size:11px; line-height:1.65; }
+.admin-forgot, .admin-recovery-back { background:transparent !important; color:#ff3e8a !important; border:1px solid rgba(255,62,138,.45) !important; padding:11px 14px !important; font-size:10px !important; }
+.admin-forgot:hover, .admin-recovery-back:hover { color:#f5e642 !important; border-color:#f5e642 !important; }

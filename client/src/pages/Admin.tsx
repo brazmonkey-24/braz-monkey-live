@@ -12,8 +12,13 @@ export default function Admin() {
   const [username, setUsername] = useState(() => typeof window !== "undefined" ? window.localStorage.getItem("braz-cms-username") ?? "" : "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showRecovery, setShowRecovery] = useState(false);
+  const [recoveryToken, setRecoveryToken] = useState("");
+  const [recoveryPassword, setRecoveryPassword] = useState("");
+  const [recoveryConfirmation, setRecoveryConfirmation] = useState("");
   const session = trpc.admin.session.useQuery(undefined, { retry: false });
   const login = trpc.admin.login.useMutation();
+  const recoverPassword = trpc.admin.recoverPassword.useMutation();
   const logout = trpc.admin.logout.useMutation();
 
   const handleLogin = async (event: React.FormEvent) => {
@@ -34,6 +39,34 @@ export default function Admin() {
     }
   };
 
+  const handleRecovery = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError("");
+    if (recoveryPassword !== recoveryConfirmation) {
+      setError("De nieuwe wachtwoorden komen niet overeen.");
+      return;
+    }
+
+    try {
+      await recoverPassword.mutateAsync({ username, recoveryToken, newPassword: recoveryPassword });
+      window.localStorage.setItem("braz-cms-username", username);
+      setPassword(recoveryPassword);
+      setRecoveryToken("");
+      setRecoveryPassword("");
+      setRecoveryConfirmation("");
+      setShowRecovery(false);
+      const result = await login.mutateAsync({ username, password: recoveryPassword });
+      if (!result.ok) {
+        setError("Wachtwoord vernieuwd. Log opnieuw in met je nieuwe wachtwoord.");
+        return;
+      }
+      setPassword("");
+      await session.refetch();
+    } catch (recoveryError) {
+      setError(errorMessage(recoveryError, "Herstelgegevens ongeldig. Probeer opnieuw."));
+    }
+  };
+
   if (session.isLoading) {
     return (
       <main className="admin-shell">
@@ -46,6 +79,29 @@ export default function Admin() {
   }
 
   if (!session.data?.ok) {
+    if (showRecovery) {
+      return (
+        <main className="admin-shell">
+          <form className="admin-login admin-recovery" onSubmit={handleRecovery}>
+            <p className="admin-eyebrow">// BRAZ MONKEY CMS / RECOVERY</p>
+            <h1>RESET ACCESS</h1>
+            <p className="admin-recovery-copy">Use the private recovery key to create a new CMS password. The key is never stored in the browser.</p>
+            <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} placeholder="Username" autoComplete="username" autoFocus required />
+            <input type="password" value={recoveryToken} onChange={(event) => setRecoveryToken(event.target.value)} placeholder="Private recovery key" autoComplete="off" required />
+            <input type="password" value={recoveryPassword} onChange={(event) => setRecoveryPassword(event.target.value)} placeholder="New password (12+ characters)" autoComplete="new-password" minLength={12} required />
+            <input type="password" value={recoveryConfirmation} onChange={(event) => setRecoveryConfirmation(event.target.value)} placeholder="Confirm new password" autoComplete="new-password" minLength={12} required />
+            {error && <p className="admin-error">{error}</p>}
+            <button type="submit" disabled={recoverPassword.isPending || login.isPending}>
+              {recoverPassword.isPending || login.isPending ? "RESETTING..." : "RESET PASSWORD"}
+            </button>
+            <button type="button" className="admin-recovery-back" onClick={() => { setShowRecovery(false); setError(""); }}>
+              ← BACK TO LOGIN
+            </button>
+          </form>
+        </main>
+      );
+    }
+
     return (
       <main className="admin-shell">
         <form className="admin-login" onSubmit={handleLogin}>
@@ -69,6 +125,9 @@ export default function Admin() {
           {error && <p className="admin-error">{error}</p>}
           <button type="submit" disabled={login.isPending}>
             {login.isPending ? "BEZIG..." : "INLOGGEN"}
+          </button>
+          <button type="button" className="admin-forgot" onClick={() => { setShowRecovery(true); setError(""); }}>
+            FORGOT PASSWORD?
           </button>
         </form>
       </main>

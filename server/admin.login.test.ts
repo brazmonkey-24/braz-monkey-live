@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { appRouter, createCmsPasswordHash } from "./routers";
+import { appRouter, createCmsPasswordHash, isAdminRecoveryToken } from "./routers";
 import { scryptSync, timingSafeEqual } from "node:crypto";
 import { ADMIN_SESSION_COOKIE } from "./adminSession";
 import type { TrpcContext } from "./_core/context";
@@ -52,5 +52,12 @@ describe("admin.login", () => {
     expect(cookies).toHaveLength(1);
     expect(cookies[0]?.name).toBe(ADMIN_SESSION_COOKIE);
     expect(cookies[0]?.value).toBeTruthy();
+  });
+
+  it("validates the configured recovery token without exposing it", () => {
+    const token = process.env.ADMIN_RECOVERY_TOKEN;
+    expect(token).toBeTruthy();
+    expect(isAdminRecoveryToken(token as string)).toBe(true);
+    expect(isAdminRecoveryToken(`${token}-invalid`)).toBe(false);
   });
 });
