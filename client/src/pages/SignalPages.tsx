@@ -42,6 +42,11 @@ function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title
   </div>;
 }
 
+function ArchivePostImage({ src, alt, type }: { src?: string | null; alt: string; type: "quote" | "prediction" | "vinyl" }) {
+  const fallback = type === "quote" ? media[1].src : type === "prediction" ? media[2].src : media[3].src;
+  return <img src={src || fallback} alt={alt} onError={(event) => { if (event.currentTarget.src.endsWith(fallback)) return; event.currentTarget.src = fallback; }} />;
+}
+
 export function TransmissionsPage() {
   const { data: syncedMedia } = trpc.transmissionMedia.list.useQuery(undefined, { refetchInterval: 15000 });
   const slots = ["monday", "wednesday", "friday"] as const;
@@ -68,8 +73,23 @@ export function OriginPage() {
 }
 
 export function ArchivePage() {
-  return <SiteFrame eyebrow="SIGNAL ARCHIVE" title={<>THE <em>ARCHIVE</em></>} intro="A record of everything Braz has intercepted so far. Visual fragments, old-school energy, and clues from the long way home.">
-    <div className="archive-page-grid">{videos.map(([id, title], i) => <figure className="archive-page-video" key={id}><div><iframe src={`https://www.youtube.com/embed/${id}`} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div><figcaption><span>0{i + 1}</span>{title}</figcaption></figure>)}</div>
+  const { data: posts, isLoading } = trpc.content.list.useQuery(undefined, { refetchInterval: 15000 });
+  const groups = [
+    { type: "quote" as const, label: "MONDAY QUOTES", eyebrow: "01 / MONDAY MORNING", intro: "Quotes, alien jokes, and sharp thoughts to start the week." },
+    { type: "prediction" as const, label: "WEDNESDAY PREDICTIONS", eyebrow: "02 / WEDNESDAY TRANSMISSION", intro: "Predictions from another dimension. Entertainment only." },
+    { type: "vinyl" as const, label: "FRIDAY VINYL DROPS", eyebrow: "03 / FRIDAY FREQUENCY", intro: "Old-school records, stories, and the sound behind the signal." },
+  ];
+  return <SiteFrame eyebrow="SIGNAL ARCHIVE" title={<>THE <em>ARCHIVE</em></>} intro="Every CMS post, every image, every weekly frequency. Choose a map to open the complete content stream.">
+    <div className="archive-map-grid">{groups.map((group) => { const items = (posts ?? []).filter((post) => post.type === group.type); return <section className={`archive-map archive-map-${group.type}`} key={group.type}><div className="archive-map-head"><div><p className="eyebrow">// {group.eyebrow}</p><h2>{group.label}</h2><p>{group.intro}</p></div><strong>{String(items.length).padStart(2, "0")} POSTS</strong></div>{isLoading ? <p className="archive-empty">LOADING SIGNALS...</p> : items.length === 0 ? <p className="archive-empty">NO POSTS IN THIS MAP YET.</p> : <div className="archive-post-grid">{items.map((post) => <a className="archive-post-card" href={`/archive/post/${post.id}`} key={post.id}><ArchivePostImage src={post.imageUrl} alt={post.title || `${group.label} image`} type={group.type} /><div className="archive-post-card-copy"><span>{new Date(post.createdAt).toLocaleDateString()}</span><h3>{post.title || (group.type === "vinyl" ? "VINYL DROP" : group.label)}</h3>{post.artist && <small>{post.artist}</small>}<p>{post.body}</p><b>OPEN FULL POST <ArrowUpRight size={14} /></b></div></a>)}</div>}</section>; })}</div>
+    <section className="archive-video-section"><div className="archive-map-head"><div><p className="eyebrow">// SIGNAL FRAGMENTS</p><h2>VIDEO ARCHIVE</h2></div><a href="#video-archive">WATCH ALL <ArrowUpRight size={14} /></a></div><div id="video-archive" className="archive-page-grid">{videos.map(([id, title], i) => <figure className="archive-page-video" key={id}><div><iframe src={`https://www.youtube.com/embed/${id}`} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div><figcaption><span>0{i + 1}</span>{title}</figcaption></figure>)}</div></section>
+  </SiteFrame>;
+}
+
+export function CmsPostPage({ id }: { id: number }) {
+  const { data: post, isLoading } = trpc.content.byId.useQuery({ id });
+  const labels = { quote: "MONDAY QUOTE", prediction: "WEDNESDAY PREDICTION", vinyl: "FRIDAY VINYL DROP" };
+  return <SiteFrame eyebrow={post ? labels[post.type] : "ARCHIVE POST"} title={post ? <>{post.title || labels[post.type]}</> : <>SIGNAL <em>LOADING</em></>} intro="A complete Braz Monkey archive transmission, preserved from the CMS and available as a full signal page.">
+    {isLoading ? <p className="archive-empty">LOADING POST...</p> : !post ? <div className="page-panel"><h2>POST NOT FOUND.</h2><a href="/archive">← BACK TO ARCHIVE</a></div> : <article className="cms-post-detail"><ArchivePostImage src={post.imageUrl} alt={post.title || labels[post.type]} type={post.type} /><div className="cms-post-detail-copy"><p className="eyebrow">// {labels[post.type]} / {new Date(post.createdAt).toLocaleDateString()}</p>{post.artist && <p className="cms-post-artist">{post.artist}</p>}<p className="cms-post-body">{post.body}</p><a className="page-action" href="/archive">← BACK TO ARCHIVE <ArrowUpRight size={14} /></a></div></article>}
   </SiteFrame>;
 }
 

@@ -8,7 +8,7 @@ import { z } from "zod";
 import { storagePut } from "./storage";
 import { invokeLLM } from "./_core/llm";
 import { ENV } from "./_core/env";
-import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia, getCmsAdminCredential, upsertCmsAdminCredential } from "./db";
+import { insertBlackbookEntry, getBlackbookEntries, insertCmsContent, getLatestCmsContent, listCmsContent, getCmsContentById, updateCmsContent, deleteCmsContent, listCmsNavigation, insertCmsNavigation, updateCmsNavigation, deleteCmsNavigation, listCmsTransmissionMedia, insertCmsTransmissionMedia, deleteCmsTransmissionMedia, getCmsAdminCredential, upsertCmsAdminCredential } from "./db";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_MAX_AGE_MS,
@@ -154,6 +154,9 @@ export const appRouter = router({
     }),
     list: publicProcedure.query(async () => {
       return listCmsContent();
+    }),
+    byId: publicProcedure.input(z.object({ id: z.number().int().positive() })).query(async ({ input }) => {
+      return getCmsContentById(input.id);
     }),
     update: publicProcedure
       .input(

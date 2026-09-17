@@ -131,7 +131,14 @@ export async function getLatestCmsContent(type: "quote" | "prediction" | "vinyl"
 export async function listCmsContent() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(cmsContent).orderBy(desc(cmsContent.createdAt)).limit(50);
+  return db.select().from(cmsContent).orderBy(desc(cmsContent.createdAt));
+}
+
+export async function getCmsContentById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(cmsContent).where(eq(cmsContent.id, id)).limit(1);
+  return rows[0];
 }
 
 export async function updateCmsContent(id: number, data: { body: string; title?: string; artist?: string }) {
