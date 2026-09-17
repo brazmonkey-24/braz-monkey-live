@@ -454,3 +454,12 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 
 
 .transmission-sync-note { display:block; margin:0 0 18px; color:var(--pink); font-size:9px; letter-spacing:.12em; }
+
+
+.transmission-card-image { position:relative; }
+.transmission-card-image > img { display:block; }
+.transmission-new-badge { position:absolute; top:14px; left:14px; padding:7px 10px; border:1px solid var(--yellow); background:var(--yellow); color:#0b0d0b !important; font-size:10px; font-weight:700; letter-spacing:.16em; box-shadow:4px 4px 0 rgba(255,62,138,.82); }
+.transmission-card-actions { display:flex; flex-wrap:wrap; align-items:center; gap:13px; margin-top:auto; }
+.transmission-card-actions a { margin-top:0; }
+.transmission-card-actions a.is-disabled { pointer-events:none; opacity:.28; }
+@media (max-width:800px) { .transmission-card-actions { gap:10px; }.transmission-card-actions a { font-size:8px; } }
