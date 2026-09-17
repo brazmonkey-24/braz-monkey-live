@@ -451,3 +451,6 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .cms-post-body { margin:30px 0; color:var(--paper); font-size:clamp(18px,2.4vw,29px); line-height:1.35; white-space:pre-wrap; }
 @media (max-width:800px) { .archive-post-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.cms-post-detail { grid-template-columns:1fr; padding:16px; } }
 @media (max-width:560px) { .archive-map,.archive-video-section { padding:16px; }.archive-map-head { flex-direction:column; gap:12px; }.archive-post-grid { grid-template-columns:1fr; }.archive-post-card img,.archive-post-no-image { aspect-ratio:1.5; } }
+
+
+.transmission-sync-note { display:block; margin:0 0 18px; color:var(--pink); font-size:9px; letter-spacing:.12em; }
