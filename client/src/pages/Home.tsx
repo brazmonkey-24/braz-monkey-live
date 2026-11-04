@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { SignalAnalytics } from "@/components/SignalAnalytics";
 import { BrazMonkeyChat } from "@/components/BrazMonkeyChat";
 import { BrazMonkeySignalPopup } from "@/components/BrazMonkeySignalPopup";
+import { TransmissionMedia } from "@/components/TransmissionMedia";
 
 const defaultTransmissions = [
   {
@@ -618,7 +619,14 @@ export default function Home() {
             {transmissions.map((item, index) => (
               <article className={`transmission-card tone-${item.tone}`} key={item.day}>
                 <div className="card-meta"><span>0{index + 1}</span><b>{item.day}</b><small>{item.cadence}</small><i className="card-signal-mark">◈</i></div>
-                <div className={`card-image card-image-${item.tone}`}>{item.mediaType === "video" && item.mediaUrl ? <video src={item.mediaUrl} poster={item.image} muted loop autoPlay playsInline controls aria-label={`${item.day} Braz Monkey footage`} /> : <img src={item.mediaUrl || item.image} alt={`${item.day} Braz Monkey transmission`} onError={(event) => { event.currentTarget.style.display = "none"; }} />}<span className="image-fallback">IMAGE<br />SIGNAL<br />LOST</span></div>
+                <TransmissionMedia
+                  source={item.mediaUrl || item.image}
+                  kind={item.mediaType === "video" && item.mediaUrl ? "video" : "image"}
+                  poster={item.image}
+                  fallback={defaultTransmissions[index].image}
+                  alt={`${item.day} Braz Monkey transmission`}
+                  className={`card-image card-image-${item.tone}`}
+                />
                 <div className="card-content"><p className="eyebrow">{item.tag}</p><h3>{item.mediaTitle || item.title}</h3><p>{item.mediaCaption || item.copy}</p><button className="text-link" onClick={() => jump("archive")}>SEE EPISODES <span>→</span></button></div>
               </article>
             ))}

@@ -463,3 +463,6 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .transmission-card-actions a { margin-top:0; }
 .transmission-card-actions a.is-disabled { pointer-events:none; opacity:.28; }
 @media (max-width:800px) { .transmission-card-actions { gap:10px; }.transmission-card-actions a { font-size:8px; } }
+
+/* Weekly media retains full-card sizing; the fallback label is rendered only after actual failure. */
+.card-image video { width:100%; height:100%; object-fit:cover; display:block; }
