@@ -60,6 +60,17 @@ describe("telemetry persistence", () => {
 });
 
 describe("telemetry aggregate summary", () => {
+  it.each([7, 30, 90] as const)("uses one named bucket for strict ONLY_FULL_GROUP_BY in the %s-day query", async days => {
+    const { query } = fakeDatabase();
+    query.mockResolvedValue([[], []]);
+    await getTelemetrySummary(days, NOW);
+    const [options, params] = query.mock.calls[1];
+    expect(options.sql).toContain("floor(`minuteBucket` / ?) * ? as `dayBucket`");
+    expect(options.sql).toContain("group by `dayBucket` order by `dayBucket` asc");
+    expect(options.sql.match(/floor\(/g)).toHaveLength(1);
+    expect(params.filter((value: unknown) => value === TELEMETRY_DAY_MS)).toHaveLength(2);
+    expect(params.at(-1)).toBe(days);
+  });
   it.each([7, 30, 90] as const)("returns a legitimate empty %s-day state, never synthetic events", async days => {
     const { query } = fakeDatabase();
     query.mockResolvedValue([[], []]);
@@ -80,7 +91,7 @@ describe("telemetry aggregate summary", () => {
   it("combines database aggregates, preserves coarse source/page totals and zero-fills only dates", async () => {
     const { query } = fakeDatabase();
     query.mockImplementation(async (options: { sql: string }) => {
-      if (options.sql.includes("group by floor(")) return [[[TODAY - TELEMETRY_DAY_MS, "3", "2", "0"], [TODAY, "9", "1", "5"]], []];
+      if (options.sql.includes("group by `dayBucket`")) return [[[TODAY - TELEMETRY_DAY_MS, "3", "2", "0"], [TODAY, "9", "1", "5"]], []];
       if (options.sql.startsWith("select `page`,")) return [[["home", "7"], ["post", "5"]], []];
       if (options.sql.startsWith("select `source`,")) return [[["search", "8"], ["direct", "4"]], []];
       if (options.sql.includes("group by `cms_telemetry_counts`.`minuteBucket`")) return [[[MINUTE, "home", "pageview", "5"], [MINUTE, "home", "store_click", "1"]], []];
@@ -110,9 +121,9 @@ describe("telemetry aggregate summary", () => {
   });
   it("handles SQL SUM nulls as genuine zero, but rejects invalid counters", async () => {
     const { query } = fakeDatabase();
-    query.mockImplementation(async (options: { sql: string }) => options.sql.includes("group by floor(") ? [[[TODAY, null, null, null]], []] : [[], []]);
+    query.mockImplementation(async (options: { sql: string }) => options.sql.includes("group by `dayBucket`") ? [[[TODAY, null, null, null]], []] : [[], []]);
     expect(await getTelemetrySummary(7, NOW)).toMatchObject({ pageViews: 0, storeClicks: 0, recentViews: 0 });
-    query.mockImplementation(async (options: { sql: string }) => options.sql.includes("group by floor(") ? [[[TODAY, "invalid", "0", "0"]], []] : [[], []]);
+    query.mockImplementation(async (options: { sql: string }) => options.sql.includes("group by `dayBucket`") ? [[[TODAY, "invalid", "0", "0"]], []] : [[], []]);
     await expect(getTelemetrySummary(7, NOW)).rejects.toThrow("Invalid telemetry counter");
   });
 });

@@ -48,7 +48,9 @@ export async function getTelemetrySummary(days: TelemetryDays, now: number): Pro
   const recentStart = end - 4 * TELEMETRY_MINUTE_MS;
   const window = and(gte(table.minuteBucket, start), lte(table.minuteBucket, end));
   const pageviewWindow = and(window, eq(table.kind, "pageview"));
-  const dayBucket = sql<number>`floor(${table.minuteBucket} / ${TELEMETRY_DAY_MS}) * ${TELEMETRY_DAY_MS}`;
+  // Group/order by the SELECT alias: separately bound copies of the arithmetic
+  // are not recognized as identical expressions by strict ONLY_FULL_GROUP_BY.
+  const dayBucket = sql<number>`floor(${table.minuteBucket} / ${TELEMETRY_DAY_MS}) * ${TELEMETRY_DAY_MS}`.as("dayBucket");
   const viewCount = sql<number>`sum(case when ${table.kind} = 'pageview' then ${table.count} else 0 end)`;
   const clickCount = sql<number>`sum(case when ${table.kind} = 'store_click' then ${table.count} else 0 end)`;
   const recentCount = sql<number>`sum(case when ${table.kind} = 'pageview' and ${table.minuteBucket} >= ${recentStart} then ${table.count} else 0 end)`;
