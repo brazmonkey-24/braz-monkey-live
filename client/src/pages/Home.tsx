@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { PUBLIC_NAV_ITEMS, STORE_URL, GAME_URL, isPublicNavTarget } from "@/lib/siteNavigation";
+import { NAV_BRAND_LOGO } from "@/lib/siteBrand";
 import { FooterDisclaimer } from "@/components/FooterDisclaimer";
 import { BrazMonkeyChat } from "@/components/BrazMonkeyChat";
 import { BrazMonkeySignalPopup } from "@/components/BrazMonkeySignalPopup";
@@ -572,7 +573,7 @@ export default function Home() {
 
       <header className={`site-header ${menuOpen ? "is-open" : ""}`}>
         <button className="brand" onClick={() => jump("signal")} aria-label="Back to Braz Monkey signal">
-          <span className="brand-mark brand-banner"><img src="/manus-storage/braz-monkey-banner-alpha_0cbb9178.png" alt="BRAZ MONKEY" /></span>
+          <span className="brand-mark brand-banner"><img src={NAV_BRAND_LOGO} alt="BRAZ MONKEY" /></span>
         </button>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
