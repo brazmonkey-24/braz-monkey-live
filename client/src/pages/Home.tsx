@@ -1,7 +1,8 @@
 // Signal Zine direction: this page behaves like a living broadcast sheet—left-aligned, textured, direct, and built around three weekly transmissions.
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { SignalAnalytics } from "@/components/SignalAnalytics";
+import { PUBLIC_NAV_ITEMS, STORE_URL, isPublicNavTarget } from "@/lib/siteNavigation";
+import { FooterDisclaimer } from "@/components/FooterDisclaimer";
 import { BrazMonkeyChat } from "@/components/BrazMonkeyChat";
 import { BrazMonkeySignalPopup } from "@/components/BrazMonkeySignalPopup";
 import { TransmissionMedia } from "@/components/TransmissionMedia";
@@ -46,23 +47,18 @@ const archiveVideos = [
   { id: "PKpmTHKZ9pU", title: "Raymzter ft ROBOTIX (onafhankelijk) - Ambachtslieden" },
 ];
 
-const navItems = ["signal", "transmissions", "telemetry", "origin", "archive", "follow", "blackbook"];
+const navItems = PUBLIC_NAV_ITEMS;
 
 const navMaps: Record<string, { label: string; target: string }[]> = {
   signal: [
     { label: "Overview", target: "/" },
     { label: "Latest transmission", target: "/transmissions" },
-    { label: "Ask Braz", target: "/telemetry" },
+    { label: "Follow Braz", target: "/follow" },
   ],
   transmissions: [
     { label: "Monday / quotes", target: "/transmissions" },
     { label: "Wednesday / predictions", target: "/transmissions" },
     { label: "Friday / vinyl", target: "/transmissions" },
-  ],
-  telemetry: [
-    { label: "Signal numbers", target: "/telemetry" },
-    { label: "Content gravity", target: "/telemetry" },
-    { label: "Field notes", target: "/telemetry" },
   ],
   origin: [
     { label: "Origin file", target: "/origin" },
@@ -580,13 +576,15 @@ export default function Home() {
         </button>
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
-          {navItems.map((id, index) => (
+          {navItems.map((id, index) => id === "store" ? (
+            <a key={id} href={STORE_URL} className="nav-store-link" data-store-link="true"><span>{String(index + 1).padStart(2, "0")}</span>STORE</a>
+          ) : (
             <div key={id} className={`nav-map ${openMap === id ? "is-open" : ""}`}>
               <button className={active === id ? "active" : ""} onClick={() => { jump(id); setOpenMap(openMap === id ? null : id); }} aria-expanded={openMap === id} aria-haspopup="true">
                 <span>0{index + 1}</span>{id}<b>+</b>
               </button>
               <div className="nav-submap" role="menu" aria-label={`${id} sub map`}>
-                {(cmsNavMaps[id]?.length ? cmsNavMaps[id] : navMaps[id]).map((item) => (
+                {(cmsNavMaps[id]?.length ? cmsNavMaps[id] : navMaps[id] ?? []).filter((item) => isPublicNavTarget(item.target)).map((item) => (
                     <button key={item.label} type="button" role="menuitem" onClick={() => { window.location.href = item.target; setOpenMap(null); }}>
                     <i>↳</i>{item.label}
                   </button>
@@ -638,8 +636,6 @@ export default function Home() {
           <div className="origin-copy"><p className="eyebrow">// ORIGIN FILE: UNKNOWN</p><h2>NO MANUAL.<br /><em>NO MAP.</em></h2><p>Somewhere between a galaxy that does not exist on any map and a planet that is still figuring out WiFi, Braz Monkey landed. No spaceship. No manual. No idea what a Monday is.</p><p>Every week he transmits what he finds—quotes that hit different, predictions from another dimension, and vinyl records that might hold the key to who he actually is.</p><button className="button button-primary" onClick={() => jump("follow")}>PICK UP THE SIGNAL <span>↗</span></button></div>
           <div className="origin-number">02<span>/</span>05</div>
         </section>
-
-        <SignalAnalytics />
 
         <section id="archive" className="section archive-section">
           <div className="section-heading"><div><p className="eyebrow">// SIGNAL ARCHIVE</p><h2>THE<br /><em>ARCHIVE</em></h2></div><p className="section-note">A record of everything Braz<br />has intercepted so far.</p></div>
@@ -738,6 +734,7 @@ export default function Home() {
         }} aria-expanded={disclaimerOpen}>{disclaimerOpen ? "HIDE DISCLAIMER" : "DISCLAIMER"} <span>{disclaimerOpen ? "−" : "?"}</span></button>
         <span>© 2026 BRAZ MONKEY UNIVERSE</span>
       </footer>
+      <FooterDisclaimer />
       <div className={`footer-disclaimer-panel ${disclaimerOpen ? "is-open" : ""}`} aria-hidden={!disclaimerOpen}>
         <div className="disclaimer-content">
           <h4>Disclaimer</h4>

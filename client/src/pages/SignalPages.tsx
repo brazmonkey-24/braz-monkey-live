@@ -1,6 +1,8 @@
 import { ReactNode, useEffect, useRef } from "react";
-import { Activity, ArrowUpRight, BookOpen, ExternalLink, Image as ImageIcon, Radio, Sparkles } from "lucide-react";
+import { ArrowUpRight, BookOpen, ExternalLink, Radio, Sparkles } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { PAGE_LINKS } from "@/lib/siteNavigation";
+import { FooterDisclaimer } from "@/components/FooterDisclaimer";
 
 const media = [
   { src: "/manus-storage/canonface_30853db0.jpeg", label: "ORIGIN / FACE FILE", tone: "yellow" },
@@ -19,10 +21,7 @@ const videos = [
   ["SYiFeoonNd8", "HE LIVES IN THE STATIC EVERYONE ELSE SKIPS"],
 ] as const;
 
-const pageLinks = [
-  ["TRANSMISSIONS", "/transmissions"], ["TELEMETRY", "/telemetry"], ["ORIGIN", "/origin"],
-  ["ARCHIVE", "/archive"], ["FOLLOW", "/follow"], ["BLACKBOOK", "/blackbook"],
-] as const;
+const pageLinks = PAGE_LINKS;
 
 function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title: ReactNode; intro: string; children: ReactNode }) {
   return <div className="signal-page-shell">
@@ -30,7 +29,7 @@ function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title
     <header className="signal-page-header">
       <a className="signal-page-brand" href="/" aria-label="Back to Braz Monkey home"><img src="/manus-storage/braz-monkey-banner-alpha_0cbb9178.png" alt="Braz Monkey" /></a>
       <nav className="signal-page-nav" aria-label="Site pages">
-        <a href="/">01 SIGNAL</a>{pageLinks.map(([label, href], i) => <a key={href} href={href}>{String(i + 2).padStart(2, "0")} {label}</a>)}
+        <a href="/">01 SIGNAL</a>{pageLinks.map(([label, href], i) => <a key={href} href={href} data-store-link={label === "STORE" ? "true" : undefined}>{String(i + 2).padStart(2, "0")} {label}</a>)}
       </nav>
       <span className="header-status"><span className="live-dot" /> SIGNAL: LIVE</span>
     </header>
@@ -38,6 +37,7 @@ function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title
       <div className="signal-page-intro"><div><p className="eyebrow">// {eyebrow}</p><h1>{title}</h1></div><p className="signal-page-lede">{intro}</p></div>
       {children}
     </main>
+    <FooterDisclaimer />
     <footer className="signal-page-footer"><a href="/">← RETURN TO THE SIGNAL</a><span>© 2026 BRAZ MONKEY UNIVERSE</span></footer>
   </div>;
 }
@@ -57,13 +57,6 @@ export function TransmissionsPage() {
   const titles = ["MORNING TRANSMISSION", "GALAXY PREDICTIONS", "TGIF VINYL DROP"];
   return <SiteFrame eyebrow="WEEKLY TRANSMISSIONS" title={<>THE <em>CONTENT</em></>} intro="Three recurring signals from the alien weekly desk. Browse the drops, then tune into the archive for the older frequencies.">
     <div className="page-card-grid transmission-page-grid">{media.slice(1, 4).map((item, i) => { const type = slots[i]; const post = latestByType[type]; const releases = groupedPosts(type); const currentIndex = post ? releases.findIndex((release) => release.id === post.id) : -1; const previous = currentIndex >= 0 ? releases[currentIndex + 1] : undefined; const next = currentIndex > 0 ? releases[currentIndex - 1] : undefined; return <article className={`page-media-card tone-${item.tone}`} key={item.src}><div className="transmission-card-image"><ArchivePostImage src={post?.imageUrl} alt={post?.title || item.label} type={type} />{post && isNew(post.createdAt) && <span className="transmission-new-badge">NEW</span>}</div><div><span>0{i + 1} / {item.label}</span><h2>{post?.title || titles[i]}</h2><p>{post?.body || copy[i]}</p>{post && <small className="transmission-sync-note">LATEST CMS RELEASE / {new Date(post.createdAt).toLocaleDateString()}</small>}<div className="transmission-card-actions"><a href={previous ? `/archive/post/${previous.id}` : "#"} aria-disabled={!previous} className={!previous ? "is-disabled" : ""}>← PREVIOUS</a><a href={post ? `/archive/post/${post.id}` : "/archive"}>OPEN FULL RELEASE <ArrowUpRight size={14} /></a><a href={next ? `/archive/post/${next.id}` : "#"} aria-disabled={!next} className={!next ? "is-disabled" : ""}>NEXT →</a></div></div></article>; })}</div>
-  </SiteFrame>;
-}
-
-export function TelemetryPage() {
-  return <SiteFrame eyebrow="SIGNAL TELEMETRY" title={<>THE <em>NUMBERS</em></>} intro="A broadcast-room view of the Braz Monkey universe: attention, content gravity, and where the signal is travelling.">
-    <div className="page-kpi-grid">{[["47,780", "VISITORS FOUND THE SIGNAL"], ["28,490", "SIGNAL RETURNS"], ["42.1%", "CONTENT GRAVITY"], ["05:02", "AVG. TRANSMISSION TIME"]].map(([value, label]) => <div className="page-kpi" key={label}><span>{label}</span><strong>{value}</strong><small>▲ 12.4% / LIVE READ</small></div>)}</div>
-    <div className="page-two-column"><article className="page-panel"><p className="eyebrow">// WHERE IT LANDS</p><h2>THE SIGNAL<br /><em>TRAVELS.</em></h2><div className="page-bars">{[["NETHERLANDS", "78%"], ["UNITED KINGDOM", "62%"], ["GERMANY", "49%"], ["USA", "38%"]].map(([label, value]) => <div key={label}><span>{label}</span><b style={{ width: value }} /><strong>{value}</strong></div>)}</div></article><article className="page-panel page-note-panel"><Activity size={22} /><p className="eyebrow">// FIELD NOTE 00.404</p><h2>NO STATIC.<br /><em>JUST SIGNAL.</em></h2><p>The numbers are a living sketch of the people finding Braz between transmissions. This is not a manual. It is a map of strange attention.</p><a href="/follow">PICK UP THE SIGNAL <ArrowUpRight size={14} /></a></article></div>
   </SiteFrame>;
 }
 

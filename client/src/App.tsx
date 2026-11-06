@@ -2,21 +2,21 @@
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Media from "./pages/Media";
-import { ArchivePage, BlackbookPage, CmsPostPage, FollowPage, OriginPage, TelemetryPage, TransmissionsPage } from "./pages/SignalPages";
+import { ArchivePage, BlackbookPage, CmsPostPage, FollowPage, OriginPage, TransmissionsPage } from "./pages/SignalPages";
 import CursorFollower from "./components/CursorFollower";
+import { TelemetryCapture } from "./components/TelemetryCapture";
 
 export default function App() {
   const path = typeof window !== "undefined" ? window.location.pathname.replace(/\/$/, "") || "/" : "/";
   const cmsPostMatch = path.match(/^\/archive\/post\/(\d+)$/);
   const page = cmsPostMatch ? <CmsPostPage id={Number(cmsPostMatch[1])} />
-    : path === "/admin" ? <Admin />
+    : path === "/admin" || path === "/telemetry" ? <Admin initialWorkspace={path === "/telemetry" ? "telemetry" : undefined} />
     : path === "/media" ? <Media />
     : path === "/transmissions" ? <TransmissionsPage />
-    : path === "/telemetry" ? <TelemetryPage />
     : path === "/origin" ? <OriginPage />
     : path === "/archive" ? <ArchivePage />
     : path === "/follow" ? <FollowPage />
     : path === "/blackbook" ? <BlackbookPage />
     : <Home />;
-  return <><CursorFollower />{page}</>;
+  return <><TelemetryCapture /><CursorFollower />{page}</>;
 }

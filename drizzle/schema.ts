@@ -1,4 +1,5 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { bigint, int, mysqlEnum, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { TELEMETRY_KINDS, TELEMETRY_PAGES, TELEMETRY_SOURCES } from "../shared/telemetry";
 
 /**
  * Core user table backing auth flow.
@@ -120,3 +121,16 @@ export const cmsAdminCredentials = mysqlTable("cms_admin_credentials", {
 
 export type CmsAdminCredential = typeof cmsAdminCredentials.$inferSelect;
 export type InsertCmsAdminCredential = typeof cmsAdminCredentials.$inferInsert;
+
+/** Cookieless minute counters. No visitor, session or raw request data belongs here. */
+export const cmsTelemetryCounts = mysqlTable("cms_telemetry_counts", {
+  minuteBucket: bigint("minuteBucket", { mode: "number", unsigned: true }).notNull(),
+  kind: mysqlEnum("kind", TELEMETRY_KINDS).notNull(),
+  page: mysqlEnum("page", TELEMETRY_PAGES).notNull(),
+  source: mysqlEnum("source", TELEMETRY_SOURCES).notNull(),
+  count: bigint("count", { mode: "number", unsigned: true }).default(1).notNull(),
+}, table => [
+  primaryKey({ columns: [table.minuteBucket, table.kind, table.page, table.source] }),
+]);
+
+export type CmsTelemetryCount = typeof cmsTelemetryCounts.$inferSelect;

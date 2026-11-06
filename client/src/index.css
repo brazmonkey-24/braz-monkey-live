@@ -466,3 +466,38 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 
 /* Weekly media retains full-card sizing; the fallback label is rendered only after actual failure. */
 .card-image video { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Public STORE link and visible Portuguese footnote. */
+.main-nav .nav-store-link { display:inline-flex; align-items:center; gap:7px; padding:9px 0; color:rgba(240,238,228,.72); font-size:10px; letter-spacing:.17em; text-decoration:none; white-space:nowrap; transition:color 160ms,transform 160ms; }
+.main-nav .nav-store-link span { color:var(--pink); font-size:8px; }
+.main-nav .nav-store-link:hover { color:var(--yellow); transform:translateY(-2px); }
+.footer-public-note { position:relative; padding:28px 8vw; border-top:1px solid var(--line); background:#0c0d0c; color:rgba(240,238,228,.72); font-size:12px; line-height:1.85; overflow-wrap:anywhere; }
+.footer-public-note h2 { max-width:1000px; margin:0 0 16px; color:var(--yellow); font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.04em; line-height:1.65; }
+.footer-public-note p { max-width:1000px; margin:12px 0; }
+.footer-public-note .footer-privacy-note { margin-top:24px; color:rgba(240,238,228,.45); font-size:10px; }
+/* Actual aggregate telemetry lives only in CMS. */
+.cms-live-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+.cms-live-toolbar > div:first-child { display:flex; gap:10px; align-items:center; color:var(--yellow); font-size:10px; }
+.cms-live-ranges { display:flex; gap:5px; }
+.cms-live-ranges button,.cms-live-toolbar > button { width:auto; padding:10px 14px; }
+.cms-live-explainer { margin:22px 0; color:rgba(240,238,228,.62); font-size:11px; line-height:1.8; max-width:850px; }
+.cms-live-meta { display:flex; flex-wrap:wrap; gap:16px; color:rgba(240,238,228,.5); font-size:9px; }
+.cms-live-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:22px 0; background:var(--line); }
+.cms-live-metrics article { display:flex; flex-direction:column; gap:14px; padding:22px; background:#111310; color:var(--yellow); }
+.cms-live-metrics span { color:rgba(240,238,228,.58); font-size:9px; }
+.cms-live-metrics strong { font-family:'Bebas Neue',sans-serif; font-size:56px; font-weight:400; }
+.cms-live-empty { padding:14px; border:1px solid var(--pink); color:var(--paper); font-size:11px; line-height:1.7; }
+.cms-live-columns { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; margin-bottom:16px; }
+.cms-live-block { padding:20px; background:#111310; border:1px solid var(--line); min-width:0; }
+.cms-live-block h3 { margin:0 0 18px; color:var(--yellow); font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; line-height:1.5; }
+.cms-live-block .cms-live-subheading { margin-top:28px; }
+.cms-live-row { display:flex; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); color:rgba(240,238,228,.7); font-size:10px; }
+.cms-live-trend { display:flex; align-items:flex-end; gap:4px; height:190px; padding-bottom:26px; }
+.cms-live-trend > div { position:relative; flex:1; min-width:1px; height:100%; display:flex; align-items:flex-end; }
+.cms-live-trend i { display:block; width:100%; background:var(--yellow); }
+.cms-live-trend small { position:absolute; top:calc(100% + 8px); font-size:7px; color:rgba(240,238,228,.5); white-space:nowrap; }
+.cms-live-trend > div:not(:nth-child(7n + 1)) small { display:none; }
+.cms-live-small { color:rgba(240,238,228,.55); font-size:10px; line-height:1.8; }
+.cms-live-feed-row { display:grid; grid-template-columns:1.4fr 1fr 1fr auto; gap:12px; padding:12px 0; border-top:1px solid var(--line); color:rgba(240,238,228,.7); font-size:10px; }
+.cms-live-feed-row b { color:var(--pink); }
+@media (max-width:700px) { .cms-live-columns,.cms-live-metrics { grid-template-columns:1fr; }.cms-live-feed-row { grid-template-columns:1fr 1fr; }.footer-public-note { padding:22px 5vw; }.main-nav .nav-store-link { padding:12px; }.cms-live-block { padding:14px; } }

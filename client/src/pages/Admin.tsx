@@ -1,14 +1,18 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { SignalAnalytics } from "@/components/SignalAnalytics";
 
 type CmsType = "quote" | "prediction" | "vinyl";
-type CmsWorkspace = "content" | "media" | "maps" | "account";
+type CmsWorkspace = "content" | "media" | "maps" | "telemetry" | "account";
 
 function errorMessage(error: unknown, fallback: string) {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
-export default function Admin() {
+export default function Admin({ initialWorkspace }: { initialWorkspace?: CmsWorkspace } = {}) {
+  useEffect(() => {
+    if (window.location.pathname.replace(/\/$/, "") === "/telemetry") window.history.replaceState(null, "", "/admin?workspace=telemetry");
+  }, []);
   const [username, setUsername] = useState(() => typeof window !== "undefined" ? window.localStorage.getItem("braz-cms-username") ?? "" : "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -77,6 +81,7 @@ export default function Admin() {
 
   return (
     <AdminDashboard
+      initialWorkspace={initialWorkspace}
       onLogout={async () => {
         await logout.mutateAsync();
         await session.refetch();
@@ -85,7 +90,7 @@ export default function Admin() {
   );
 }
 
-function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
+function AdminDashboard({ onLogout, initialWorkspace }: { onLogout: () => Promise<void>; initialWorkspace?: CmsWorkspace }) {
   const [type, setType] = useState<CmsType>("quote");
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
@@ -102,7 +107,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
   const updateMut = trpc.content.update.useMutation();
   const deleteMut = trpc.content.delete.useMutation();
   const utils = trpc.useUtils();
-  const [workspace, setWorkspace] = useState<CmsWorkspace>("content");
+  const [workspace, setWorkspace] = useState<CmsWorkspace>(() => initialWorkspace ?? (new URLSearchParams(window.location.search).get("workspace") === "telemetry" ? "telemetry" : "content"));
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -193,7 +198,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
           <button type="button" className={workspace === "content" ? "active" : ""} onClick={() => setWorkspace("content")}><b>01</b><span>CONTENT DESK</span><small>Quotes, predictions, vinyl</small></button>
           <button type="button" className={workspace === "media" ? "active" : ""} onClick={() => setWorkspace("media")}><b>02</b><span>MEDIA FOLDERS</span><small>Monday, Wednesday, Friday</small></button>
           <button type="button" className={workspace === "maps" ? "active" : ""} onClick={() => setWorkspace("maps")}><b>03</b><span>PAGE MAPS</span><small>Navigation and submaps</small></button>
-          <button type="button" className={workspace === "account" ? "active" : ""} onClick={() => setWorkspace("account")}><b>04</b><span>RESET PASSWORD</span><small>Change CMS password</small></button>
+          <button type="button" className={workspace === "telemetry" ? "active" : ""} onClick={() => setWorkspace("telemetry")}><b>04</b><span>LIVE TELEMETRY</span><small>Private page views & STORE clicks</small></button>
+          <button type="button" className={workspace === "account" ? "active" : ""} onClick={() => setWorkspace("account")}><b>05</b><span>RESET PASSWORD</span><small>Change CMS password</small></button>
         </nav>
 
         {workspace === "content" && <section className="cms-workspace-panel">
@@ -298,6 +304,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => Promise<void> }) {
 
         {workspace === "media" && <TransmissionMediaManager />}
         {workspace === "maps" && <NavigationManager />}
+        {workspace === "telemetry" && <SignalAnalytics />}
         {workspace === "account" && <section className="cms-workspace-panel">
           <div className="cms-section-heading"><div><p className="admin-eyebrow">// ACCOUNT SECURITY</p><h2>RESET PASSWORD</h2></div><span className="admin-badge admin-badge-vinyl">PRIVATE</span></div>
           <p className="cms-dashboard-lede cms-account-copy">Update the CMS password without editing code or environment settings. Your username stays the same.</p>
@@ -370,7 +377,7 @@ function NavigationManager() {
   return <section className="admin-navigation-manager">
     <div className="admin-list-heading"><div><p className="admin-eyebrow">// PAGE MAPS</p><h2>SUBMAP NAVIGATIE</h2></div><span className="admin-badge admin-badge-vinyl">CMS LIVE</span></div>
     <form className="admin-form admin-navigation-form" onSubmit={submit}>
-      <label>Hoofdsectie<select value={section} onChange={(event) => setSection(event.target.value)}>{["signal", "transmissions", "telemetry", "origin", "archive", "follow", "blackbook"].map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <label>Hoofdsectie<select value={section} onChange={(event) => setSection(event.target.value)}>{["signal", "transmissions", "origin", "archive", "follow", "blackbook"].map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
       <label>Submap label<input value={label} onChange={(event) => setLabel(event.target.value)} placeholder="Bijv. Weekly drops" required /></label>
       <label>Pagina route<input value={path} onChange={(event) => setPath(event.target.value)} placeholder="/transmissions" required /></label>
       <label>Volgorde<input type="number" min={0} max={999} value={sortOrder} onChange={(event) => setSortOrder(Number(event.target.value))} /></label>
