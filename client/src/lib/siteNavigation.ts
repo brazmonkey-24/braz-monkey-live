@@ -1,8 +1,10 @@
 export const STORE_URL = "https://shop.braz-monkey.com/";
-export const PUBLIC_NAV_ITEMS = ["signal", "transmissions", "origin", "archive", "follow", "store", "blackbook"] as const;
+export const GAME_URL = "https://velvety-biscuit-efea03.netlify.app/";
+export const PUBLIC_NAV_ITEMS = ["signal", "transmissions", "origin", "archive", "follow", "game", "store", "blackbook"] as const;
 export const PAGE_LINKS = [
   ["TRANSMISSIONS", "/transmissions"], ["ORIGIN", "/origin"],
   ["ARCHIVE", "/archive"], ["FOLLOW", "/follow"],
+  ["GAME", GAME_URL],
   ["SHOP", STORE_URL], ["BLACKBOOK", "/blackbook"],
 ] as const;
 

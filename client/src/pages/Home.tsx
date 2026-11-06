@@ -1,7 +1,7 @@
 // Signal Zine direction: this page behaves like a living broadcast sheet—left-aligned, textured, direct, and built around three weekly transmissions.
 import { useEffect, useRef, useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { PUBLIC_NAV_ITEMS, STORE_URL, isPublicNavTarget } from "@/lib/siteNavigation";
+import { PUBLIC_NAV_ITEMS, STORE_URL, GAME_URL, isPublicNavTarget } from "@/lib/siteNavigation";
 import { FooterDisclaimer } from "@/components/FooterDisclaimer";
 import { BrazMonkeyChat } from "@/components/BrazMonkeyChat";
 import { BrazMonkeySignalPopup } from "@/components/BrazMonkeySignalPopup";
@@ -578,6 +578,8 @@ export default function Home() {
         <nav className="main-nav" aria-label="Primary navigation">
           {navItems.map((id, index) => id === "store" ? (
             <a key={id} href={STORE_URL} className="nav-store-link" data-store-link="true"><span>{String(index + 1).padStart(2, "0")}</span>SHOP</a>
+          ) : id === "game" ? (
+            <a key={id} href={GAME_URL} className="nav-game-link" data-game-link="true"><span>{String(index + 1).padStart(2, "0")}</span>GAME</a>
           ) : (
             <div key={id} className={`nav-map ${openMap === id ? "is-open" : ""}`}>
               <button className={active === id ? "active" : ""} onClick={() => { jump(id); setOpenMap(openMap === id ? null : id); }} aria-expanded={openMap === id} aria-haspopup="true">
@@ -603,7 +605,7 @@ export default function Home() {
           <div className="hero-glitch" />
           <div className="hero-copy">
             <p className="eyebrow">// TRANSMISSION INCOMING <span>FM 00.404</span></p>
-            <h1 className="glitch-title" data-text="BRAZ MONKEY">BRAZ<br /><em>MONKEY</em></h1>
+            <h1 className="glitch-title" data-text={"BRAZ\nMONKEY"} aria-label="BRAZ MONKEY">BRAZ<br /><em>MONKEY</em></h1>
             <p className="hero-description">An alien with no origin, no history. Just landed on Earth and trying to figure it all out—one Monday quote, one bet, one vinyl record at a time.</p>
             <div className="hero-actions"><button className="button button-primary" onClick={() => jump("transmissions")}>FOLLOW THE SIGNAL <span>↗</span></button><button className="button button-ghost" onClick={() => jump("origin")}>THE STORY <span>→</span></button></div>
           </div>

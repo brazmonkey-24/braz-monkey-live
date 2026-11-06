@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { PUBLIC_NAV_ITEMS, PAGE_LINKS, STORE_URL, isPublicNavTarget } from "../client/src/lib/siteNavigation";
+import { PUBLIC_NAV_ITEMS, PAGE_LINKS, STORE_URL, GAME_URL, isPublicNavTarget } from "../client/src/lib/siteNavigation";
 import { pageCategory, referrerCategory, shouldCapture } from "../client/src/lib/telemetryCapture";
 import { DISCLAIMER_TITLE, DISCLAIMER_PARAGRAPHS } from "../client/src/components/FooterDisclaimer";
 
@@ -13,6 +13,17 @@ describe("public navigation and footer", () => {
     expect(labels).not.toContain("STORE");
     expect(PAGE_LINKS.find(([label]) => label === "SHOP")?.[1]).toBe("https://shop.braz-monkey.com/");
     expect(STORE_URL).not.toContain("admin.shopify");
+  });
+  it("puts GAME before SHOP and opens the existing playable Space Invaders", () => {
+    expect(PUBLIC_NAV_ITEMS.indexOf("game") + 1).toBe(PUBLIC_NAV_ITEMS.indexOf("store"));
+    expect(PAGE_LINKS.find(([label]) => label === "GAME")?.[1]).toBe(GAME_URL);
+    expect(GAME_URL).toBe("https://velvety-biscuit-efea03.netlify.app/");
+    const home = readFileSync(new URL("../client/src/pages/Home.tsx", import.meta.url), "utf8");
+    const anchor = home.match(/<a[^>]+href=\{GAME_URL\}[^>]*>/)?.[0];
+    expect(anchor).toContain('data-game-link="true"');
+    expect(anchor).not.toContain('data-store-link');
+    expect(anchor).not.toContain('target=');
+    expect(home).toContain('</span>GAME</a>');
   });
   it("hides telemetry/admin links from public CMS submaps without deleting records", () => {
     for (const url of ["/telemetry", "/telemetry/", "/admin?workspace=telemetry", "https://www.braz-monkey.com/telemetry", "/#telemetry"]) expect(isPublicNavTarget(url)).toBe(false);

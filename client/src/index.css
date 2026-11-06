@@ -123,9 +123,10 @@ button:focus-visible,a:focus-visible { outline:2px solid var(--yellow); outline-
 .hero-glitch { position:absolute; inset:0; z-index:-1; pointer-events:none; background:repeating-linear-gradient(0deg,transparent 0 9px,rgba(255,62,138,.08) 10px 11px),repeating-linear-gradient(90deg,transparent 0 120px,rgba(245,230,66,.05) 121px 122px); mix-blend-mode:screen; animation:glitch-shift 2.8s steps(2,end) infinite; }
 .hero-copy { max-width:600px; }
 .glitch-title { position:relative; margin:0 0 18px; color:var(--yellow); font-family:'Bebas Neue',sans-serif; font-size:clamp(100px, 16vw, 230px); line-height:.82; letter-spacing:.025em; text-shadow:4px 4px 0 rgba(255,62,138,.6); }
-.glitch-title::before,.glitch-title::after { position:absolute; inset:0; content:attr(data-text); overflow:hidden; }
+.glitch-title::before,.glitch-title::after { position:absolute; inset:0; content:attr(data-text); overflow:hidden; white-space:pre-line; pointer-events:none; }
 .glitch-title::before { color:var(--pink); transform:translate(-2px,0); clip-path:inset(0 0 55% 0); animation:glitch-clip 2.4s steps(2,end) infinite; }
 .glitch-title::after { color:var(--paper); transform:translate(2px,0); clip-path:inset(55% 0 0 0); animation:glitch-clip 2.4s steps(2,end) infinite reverse; }
+@media (prefers-reduced-motion: reduce) { .hero-glitch,.glitch-title::before,.glitch-title::after { animation:none; } }
 .eyebrow { margin:0 0 18px; color:var(--pink); font-size:10px; font-weight:600; letter-spacing:.18em; }
 .eyebrow span { margin-left:20px; color:var(--yellow); }
 h1,h2,h3 { margin:0; font-family:'Bebas Neue',sans-serif; font-weight:400; letter-spacing:.025em; line-height:.82; }
@@ -467,10 +468,10 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 /* Weekly media retains full-card sizing; the fallback label is rendered only after actual failure. */
 .card-image video { width:100%; height:100%; object-fit:cover; display:block; }
 
-/* Public STORE link and visible Portuguese footnote. */
-.main-nav .nav-store-link { display:inline-flex; align-items:center; gap:7px; padding:9px 0; color:rgba(240,238,228,.72); font-size:10px; letter-spacing:.17em; text-decoration:none; white-space:nowrap; transition:color 160ms,transform 160ms; }
-.main-nav .nav-store-link span { color:var(--pink); font-size:8px; }
-.main-nav .nav-store-link:hover { color:var(--yellow); transform:translateY(-2px); }
+/* Public SHOP / GAME links and visible Portuguese footnote. */
+.main-nav .nav-store-link,.main-nav .nav-game-link { display:inline-flex; align-items:center; gap:7px; padding:9px 0; color:rgba(240,238,228,.72); font-size:10px; letter-spacing:.17em; text-decoration:none; white-space:nowrap; transition:color 160ms,transform 160ms; }
+.main-nav .nav-store-link span,.main-nav .nav-game-link span { color:var(--pink); font-size:8px; }
+.main-nav .nav-store-link:hover,.main-nav .nav-game-link:hover { color:var(--yellow); transform:translateY(-2px); }
 .footer-public-note { position:relative; padding:28px 8vw; border-top:1px solid var(--line); background:#0c0d0c; color:rgba(240,238,228,.72); font-size:12px; line-height:1.85; overflow-wrap:anywhere; }
 .footer-public-note h2 { max-width:1000px; margin:0 0 16px; color:var(--yellow); font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.04em; line-height:1.65; }
 .footer-public-note p { max-width:1000px; margin:12px 0; }
@@ -500,4 +501,4 @@ h1 em,h2 em,h3 em { color:var(--pink); font-style:normal; }
 .cms-live-small { color:rgba(240,238,228,.55); font-size:10px; line-height:1.8; }
 .cms-live-feed-row { display:grid; grid-template-columns:1.4fr 1fr 1fr auto; gap:12px; padding:12px 0; border-top:1px solid var(--line); color:rgba(240,238,228,.7); font-size:10px; }
 .cms-live-feed-row b { color:var(--pink); }
-@media (max-width:700px) { .cms-live-columns,.cms-live-metrics { grid-template-columns:1fr; }.cms-live-feed-row { grid-template-columns:1fr 1fr; }.footer-public-note { padding:22px 5vw; }.main-nav .nav-store-link { padding:12px; }.cms-live-block { padding:14px; } }
+@media (max-width:700px) { .cms-live-columns,.cms-live-metrics { grid-template-columns:1fr; }.cms-live-feed-row { grid-template-columns:1fr 1fr; }.footer-public-note { padding:22px 5vw; }.main-nav .nav-store-link,.main-nav .nav-game-link { padding:12px; }.cms-live-block { padding:14px; } }

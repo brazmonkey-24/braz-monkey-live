@@ -29,7 +29,7 @@ function SiteFrame({ eyebrow, title, intro, children }: { eyebrow: string; title
     <header className="signal-page-header">
       <a className="signal-page-brand" href="/" aria-label="Back to Braz Monkey home"><img src="/manus-storage/braz-monkey-banner-alpha_0cbb9178.png" alt="Braz Monkey" /></a>
       <nav className="signal-page-nav" aria-label="Site pages">
-        <a href="/">01 SIGNAL</a>{pageLinks.map(([label, href], i) => <a key={href} href={href} data-store-link={label === "SHOP" ? "true" : undefined}>{String(i + 2).padStart(2, "0")} {label}</a>)}
+        <a href="/">01 SIGNAL</a>{pageLinks.map(([label, href], i) => <a key={href} href={href} data-store-link={label === "SHOP" ? "true" : undefined} data-game-link={label === "GAME" ? "true" : undefined}>{String(i + 2).padStart(2, "0")} {label}</a>)}
       </nav>
       <span className="header-status"><span className="live-dot" /> SIGNAL: LIVE</span>
     </header>
