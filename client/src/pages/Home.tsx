@@ -577,7 +577,7 @@ export default function Home() {
         <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">{menuOpen ? "×" : "☰"}</button>
         <nav className="main-nav" aria-label="Primary navigation">
           {navItems.map((id, index) => id === "store" ? (
-            <a key={id} href={STORE_URL} className="nav-store-link" data-store-link="true"><span>{String(index + 1).padStart(2, "0")}</span>STORE</a>
+            <a key={id} href={STORE_URL} className="nav-store-link" data-store-link="true"><span>{String(index + 1).padStart(2, "0")}</span>SHOP</a>
           ) : (
             <div key={id} className={`nav-map ${openMap === id ? "is-open" : ""}`}>
               <button className={active === id ? "active" : ""} onClick={() => { jump(id); setOpenMap(openMap === id ? null : id); }} aria-expanded={openMap === id} aria-haspopup="true">

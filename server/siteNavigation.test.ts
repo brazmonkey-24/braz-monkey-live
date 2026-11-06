@@ -5,12 +5,13 @@ import { pageCategory, referrerCategory, shouldCapture } from "../client/src/lib
 import { DISCLAIMER_TITLE, DISCLAIMER_PARAGRAPHS } from "../client/src/components/FooterDisclaimer";
 
 describe("public navigation and footer", () => {
-  it("puts STORE immediately before BLACKBOOK, never telemetry", () => {
+  it("puts SHOP immediately before BLACKBOOK, never telemetry", () => {
     expect(PUBLIC_NAV_ITEMS).not.toContain("telemetry");
     expect(PUBLIC_NAV_ITEMS.indexOf("store") + 1).toBe(PUBLIC_NAV_ITEMS.indexOf("blackbook"));
     const labels = PAGE_LINKS.map(([label]) => label);
-    expect(labels.indexOf("STORE") + 1).toBe(labels.indexOf("BLACKBOOK"));
-    expect(PAGE_LINKS.find(([label]) => label === "STORE")?.[1]).toBe("https://store.braz-monkey.com/");
+    expect(labels.indexOf("SHOP") + 1).toBe(labels.indexOf("BLACKBOOK"));
+    expect(labels).not.toContain("STORE");
+    expect(PAGE_LINKS.find(([label]) => label === "SHOP")?.[1]).toBe("https://shop.braz-monkey.com/");
     expect(STORE_URL).not.toContain("admin.shopify");
   });
   it("hides telemetry/admin links from public CMS submaps without deleting records", () => {
@@ -18,10 +19,12 @@ describe("public navigation and footer", () => {
     expect(isPublicNavTarget("https://www.hot97.com/listen-live/")).toBe(true);
     expect(isPublicNavTarget("/transmissions")).toBe(true);
   });
-  it("keeps STORE as normal same-tab anchor and telemetry only in CMS", () => {
+  it("keeps SHOP as normal same-tab anchor and telemetry only in CMS", () => {
     const home = readFileSync(new URL("../client/src/pages/Home.tsx", import.meta.url), "utf8");
     expect(home).toContain('href={STORE_URL}');
     expect(home).toContain('data-store-link="true"');
+    expect(home).toContain('</span>SHOP</a>');
+    expect(home).not.toContain('</span>STORE</a>');
     expect(home).not.toContain("<SignalAnalytics");
     const admin = readFileSync(new URL("../client/src/pages/Admin.tsx", import.meta.url), "utf8");
     expect(admin).toContain('workspace === "telemetry" && <SignalAnalytics />');

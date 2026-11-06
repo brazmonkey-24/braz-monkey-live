@@ -1,9 +1,9 @@
-export const STORE_URL = "https://store.braz-monkey.com/";
+export const STORE_URL = "https://shop.braz-monkey.com/";
 export const PUBLIC_NAV_ITEMS = ["signal", "transmissions", "origin", "archive", "follow", "store", "blackbook"] as const;
 export const PAGE_LINKS = [
   ["TRANSMISSIONS", "/transmissions"], ["ORIGIN", "/origin"],
   ["ARCHIVE", "/archive"], ["FOLLOW", "/follow"],
-  ["STORE", STORE_URL], ["BLACKBOOK", "/blackbook"],
+  ["SHOP", STORE_URL], ["BLACKBOOK", "/blackbook"],
 ] as const;
 
 /** Hide old CMS telemetry links without deleting or changing stored navigation. */
